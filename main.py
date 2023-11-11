@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import messagebox
     
 root = Tk()
 root.title("Inicio")
@@ -69,12 +70,43 @@ ImagenSistema.bind("<Enter>", cambiarImagenesOG)
 
 
 def Ingresar(root):
-    root.destroy()
+    root.withdraw()
     seg = Tk()
     seg.title("Sistema de Gestión de Bibliotecas")
     seg.geometry("1100x700")
     seg.configure(background="#b9d279")
     Label(seg, text="Esta es la segunda ventana").pack()
+    def Volver():
+        seg.destroy()
+        root.deiconify()
+    
+    menuBar2 = Menu(seg)
+    seg.option_add("*tearOff",  False)
+    seg.config(menu=menuBar2)
+    menu2= Menu(menuBar2)
+
+    menuBar2.add_cascade(label="Archivo",menu=menu2)
+    menu2.add_command(label="Aplicacion",command=lambda: messagebox.showinfo("Aplicacion","Este sistema permite el control y administracion de la base de datos del sistema de bibliotecas de la Universidad Nacional. En este sistema encontraras funcionalidades para el prestamo de material de la biblioteca, para agregar/eliminar material y para gestionar tus reservas/multas."))
+    menu2.add_command(label="Salir",command=lambda:Volver())
+
+    menu3 = Menu(menuBar2)
+    menuBar2.add_cascade(label="Procesos y Consultas",menu=menu3)
+    menu3.add_command(label="Préstamo de Recursos",command=lambda: print(":)"))
+    menu3.add_command(label="Reserva de Recursos para Eventos",command=lambda: print(":)"))
+    menu3.add_command(label="Gestión Base de Datos",command=lambda: print(":)"))
+    menu3.add_command(label="Gestión de Prestamos y Reservas",command=lambda: print(":)"))
+    menu3.add_command(label="Gestión de Multas",command=lambda: print(":)"))
+
+    def Funny():
+        respuesta = False
+        while(respuesta != True):
+            respuesta = messagebox.askyesno("Guzmán, David, Oswaldo", "¿Samuel Gutiérrez y Juan Pérez se merecen un 5.0 por este trabajo?")
+        messagebox.showwarning("OJO","Esperamos que sea verdad :)")
+
+    menu4 = Menu(menuBar2)
+    menuBar2.add_cascade(label="Ayuda",menu=menu4)
+    menu4.add_command(label="Acerca de",command=lambda: Funny())
+
     seg.mainloop()
 
 
@@ -145,9 +177,11 @@ menuBar = Menu(root)
 root.option_add("*tearOff",  False)
 root.config(menu=menuBar)
 menu1= Menu(menuBar)
-menuBar.add_cascade(label="Archivo",menu=menu1)
+menuBar.add_cascade(label="Inicio",menu=menu1)
+"""
 textDescrip="Este sistema permite el control y administracion de la base de datos del sistema de bibliotecas de la Universidad Nacional. En este sistema encontraras funcionalidades para el prestamo de material de la biblioteca, para agregar/eliminar material y para gestionar tus reservas/multas."
 menu1.add_command(label="Descripcion",command=lambda: descripTexto.config(text=textDescrip))
+"""
 menu1.add_command(label="Salir",command=lambda:root.destroy())
         
 
