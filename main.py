@@ -1,8 +1,8 @@
 from tkinter import *
-
+    
 root = Tk()
 root.title("Inicio")
-root.geometry("1100x800")
+root.geometry("1100x700")
 root.configure(background="#b9d279")
 
 """
@@ -18,12 +18,12 @@ frameP6 = frame contenido en frameP2 que contiene las fotos de los desarrollador
 
 
 frameP1 = Frame(root)
-frameP1.grid(row=0,column=0,padx=50,pady=5, sticky="n")
+frameP1.grid(row=0,column=0,padx=25,pady=5, sticky="n")
 frameP1['borderwidth'] = 5
 frameP1.configure(background="#b9d279")
 
 frameP2 = Frame(root)
-frameP2.grid(row=0,column=1,padx=(5,0),pady=5, sticky="n")
+frameP2.grid(row=0,column=1,padx=25,pady=5, sticky="n")
 frameP2['borderwidth'] = 5
 frameP2.configure(background="#b9d279")
 
@@ -44,24 +44,64 @@ frameP6.grid(row = 1, column = 0, pady=40)
 saludo = Label(frameP3,text="Bienvenido al sistema de bibliotecas de la Universidad Nacional de Colombia",font=("arial", 18, "bold"),bg="#7c9933",wraplength=500,fg="#cedae0")
 saludo.pack(expand = True)
 
-imagen = PhotoImage(file = "loki.png")
-ImagenSistema = Label(frameP4, image= imagen,width=420,height=420,wraplength=160,highlightbackground="#7c9933",highlightthickness=4, bg = "#b9d279")
+imagenes = [PhotoImage(file = "img\\Sis1.png"),
+               PhotoImage(file = "img\\Sis2.png"),
+               PhotoImage(file = "img\\Sis3.png"),
+               PhotoImage(file = "img\\Sis4.png"),
+               PhotoImage(file = "img\\Sis5.png")]
+
+#imagen = PhotoImage(file = "loki.png")
+ImagenSistema = Label(frameP4, image= imagenes[0],width=420,height=420,wraplength=160,highlightbackground="#7c9933",highlightthickness=4, bg = "#b9d279")
 ImagenSistema.pack(side="top",pady=0)
+
+im_actual = 0
+
+def cambiarImagenesOG(evento):
+    global im_actual
+    if im_actual < 4:
+        im_actual = im_actual+1
+    else:
+        im_actual = 0
+    
+    ImagenSistema.config(image=imagenes[im_actual])
+
+ImagenSistema.bind("<Enter>", cambiarImagenesOG)
+
+
+def Ingresar(root):
+    root.destroy()
+    seg = Tk()
+    seg.title("Sistema de Gestión de Bibliotecas")
+    seg.geometry("1100x700")
+    seg.configure(background="#b9d279")
+    Label(seg, text="Esta es la segunda ventana").pack()
+    seg.mainloop()
+
 
 def cambiarDeVentana():
     pass
 
-botonIngreso=Button(frameP4,text="Ingresar",command=cambiarDeVentana,bg="#7c9933",font=("arial", 12, "bold"),fg="#cedae0")
+botonIngreso=Button(frameP4,text="Ingresar",bg="#7c9933",font=("arial", 12, "bold"),fg="#cedae0", command=lambda: Ingresar(root))
 botonIngreso.pack(side="top",pady=(10,20))
 
-biografias = ["Hola, soy juan dadadadadadadadadadadadadadadadadadadadad", "Y Samuel y que tales bababababababababbabab"]
+biografias = [
+                "Juan es un desarrollador de software. Nació en Turbo, y tiene un gato amarillo llamado Loki. Le gusta aprender cosas nuevas y resolver problemas complejos con su código. Además de demostrar interés por el campo de la Inteligencia Artificial.",
+                "Samuel es un desarrollador de software apasionado por los videojuegos. Nació en Medellín, y tiene una gata negra llamada Pólvora. Tiene experiencia en varios lenguajes de programación, y es Técnico en Desarrollo de Software."]
 
-presentacion = Label(frameP5, text = biografias[0], font=("arial", 18, "bold"), bg="#7c9933", wraplength = 500, fg="#cedae0")
+presentacion = Label(frameP5, text = biografias[1], font=("arial", 13, "bold"), bg="#7c9933", wraplength = 500, fg="#cedae0", width= 50)
 presentacion.pack(expand = True)
 
 
-fotosSamuel = [PhotoImage(file = "img\\devSam1.png"), PhotoImage(file = "img\\devSam2.png"), PhotoImage(file = "img\\devSam3.png"), PhotoImage(file = "img\\devSam4.png")]
-fotosPablo = [PhotoImage(file = "img\\devPab1.png"), PhotoImage(file = "img\\devPab2.png"), PhotoImage(file = "img\\devPab3.png"), PhotoImage(file = "img\\devPab4.png")]
+fotosSamuel = [PhotoImage(file = "img\\devSam1.png"),
+               PhotoImage(file = "img\\devSam2.png"),
+               PhotoImage(file = "img\\devSam3.png"),
+               PhotoImage(file = "img\\devSam4.png")]
+
+fotosPablo = [PhotoImage(file = "img\\devPab1.png"),
+              PhotoImage(file = "img\\devPab2.png"),
+              PhotoImage(file = "img\\devPab3.png"),
+              PhotoImage(file = "img\\devPab4.png")]
+
 samuel = True
 
 
@@ -93,8 +133,8 @@ def cambiarImagenes(evento):
     presentacion.config(text=biografias[1])
     samuel = True
     return
-    
-frameP6.bind("<Enter>", cambiarImagenes)
+
+#frameP6.bind("<Enter>", cambiarImagenes)
 presentacion.bind("<Button-1>", cambiarImagenes)
 
 
