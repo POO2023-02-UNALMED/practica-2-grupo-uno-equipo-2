@@ -1,6 +1,3 @@
-from .Biblioteca import Biblioteca
-from .Libro import Libro
-from .Computador import Computador
 
 class Sistema:
     def __init__(self):

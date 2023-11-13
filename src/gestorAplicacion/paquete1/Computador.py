@@ -4,7 +4,7 @@ class Computador(Recurso):
     totalPCs = 0
 
     def __init__(self, nombre, idRecurso, marca, gama):
-        super().__init__(nombre, idRecurso)
+        super().__init__(nombre, idRecurso, "Computador")
         self.marca = marca
         self.gama = gama
         Computador.totalPCs += 1

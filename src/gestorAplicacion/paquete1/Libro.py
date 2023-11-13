@@ -4,7 +4,7 @@ class Libro(Recurso):
     totalLibros = 0
 
     def __init__(self, nombre, idRecurso, isbn, autor, año):
-        super().__init__(nombre, idRecurso)
+        super().__init__(nombre, idRecurso, "Libro")
         self.isbn = isbn
         self.autor = autor
         self.año = año
