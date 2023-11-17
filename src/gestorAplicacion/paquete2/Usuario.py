@@ -1,6 +1,3 @@
-from .Prestamo import Prestamo
-from .Multa import Multa
-
 class Usuario:
     prestamos_maximos = 3  # Número máximo de préstamos permitidos
 

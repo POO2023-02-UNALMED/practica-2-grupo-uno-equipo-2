@@ -9,7 +9,8 @@ from gestorAplicacion.paquete1.PC import PC
 from gestorAplicacion.paquete1.Autor import Autor
 from gestorAplicacion.paquete1.Sala import Sala
 from gestorAplicacion.paquete2.Sistema import Sistema
-
+from gestorAplicacion.paquete2.Usuario import Usuario
+from reservaEvento import ReservaEvento
 
 
 class ventanaInicial(Tk):
@@ -49,7 +50,7 @@ class ventanaInicial(Tk):
         frameP4.grid(row = 1, column = 0, pady=45)
 
         frameP5 = Label(frameP2,height=70,width=500,bg="#7c9933")
-        frameP5.grid(row=0,column=0)
+        frameP5.grid(row=0,column=0) 
 
 
         frameP6 = Frame(frameP2, width=450, height=450)
@@ -168,8 +169,6 @@ class ventPrincipal(Tk):
             self.geometry("1100x700")
             self.configure(background="#b9d279")
 
-
-
             def Volver():
                 self.destroy()
                 ventanaInicial(sistema)
@@ -181,7 +180,15 @@ class ventPrincipal(Tk):
 
             def prestamoDeRecursos():
                 kill(self)
-                PrestamoRecursos(self, sistema).pack()
+                p = PrestamoRecursos(self, sistema)
+                p.grid(row=0, column=0, rowspan=2)
+                p.place(relx=0.5,rely=0.5,anchor="center")
+
+            def ReservaDeEvento():
+                kill(self)
+                p = ReservaEvento(self,sistema)
+                p.grid(row=0, column=0, rowspan=2)
+                p.place(relx=0.5,rely=0.5,anchor="center")
 
             def Funny():
                 respuesta = False
@@ -234,7 +241,7 @@ class ventPrincipal(Tk):
             menu3 = Menu(menuBar2)
             menuBar2.add_cascade(label="Procesos y Consultas",menu=menu3)
             menu3.add_command(label="Préstamo de Recursos",command= prestamoDeRecursos)
-            menu3.add_command(label="Reserva de Recursos para Eventos",command=lambda: print(":)"))
+            menu3.add_command(label="Reserva de Recursos para Eventos",command= ReservaDeEvento)
             menu3.add_command(label="Gestión Base de Datos",command=lambda: print(":)"))
             menu3.add_command(label="Gestión de Prestamos y Reservas",command=lambda: print("si"))
             menu3.add_command(label="Gestión de Multas",command=lambda: print(":)"))
@@ -247,7 +254,7 @@ class ventPrincipal(Tk):
 
             self.mainloop()
 
-
+      
 if __name__ == "__main__":
     sistema = Sistema()
 
@@ -300,9 +307,9 @@ if __name__ == "__main__":
     bibliotecas[0].añadir_sala(Sala(bibliotecas[0], "Auditorio 1", 30))
     bibliotecas[0].añadir_sala(Sala(bibliotecas[0], "Auditorio 2", 50))
     bibliotecas[0].añadir_sala(Sala(bibliotecas[0], "Auditorio 3", 10))
-    bibliotecas[1].añadir_sala(Sala(bibliotecas[1], "Auditorio 1", 150))
-    bibliotecas[1].añadir_sala(Sala(bibliotecas[1], "Auditorio 2", 30))
-    bibliotecas[1].añadir_sala(Sala(bibliotecas[1], "Auditorio 3", 60))
+    bibliotecas[1].añadir_sala(Sala(bibliotecas[1], "Auditorio 4", 150))
+    bibliotecas[1].añadir_sala(Sala(bibliotecas[1], "Auditorio 5", 30))
+    bibliotecas[1].añadir_sala(Sala(bibliotecas[1], "Auditorio 6", 60))
 
 
     # Copias sede Medellin
@@ -361,6 +368,7 @@ if __name__ == "__main__":
     sistema.set_bibliotecas(bibliotecas)
     sistema.set_computadores(computadores)
     sistema.set_libros(libros)
+    sistema.set_user(Usuario())
 
 
 

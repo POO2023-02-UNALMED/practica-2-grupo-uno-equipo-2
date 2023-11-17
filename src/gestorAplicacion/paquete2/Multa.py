@@ -1,5 +1,4 @@
 from datetime import date
-from .Usuario import Usuario
 
 class Multa:
     numero_multas = 0  # Variable de clase para llevar un registro del número de multas

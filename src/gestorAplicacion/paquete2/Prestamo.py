@@ -1,9 +1,5 @@
 from datetime import date
 from .Usuario import Usuario
-from .Copia import Copia
-from .PC import PC
-from .Sala import Sala
-from .Biblioteca import Biblioteca
 
 class Prestamo:
     numero_prestamos = 0  # Variable de clase para llevar un registro del número de préstamos
@@ -18,10 +14,12 @@ class Prestamo:
         self.id_prestamo = self.generar_identificador_unico()
         self.copias_prestadas = []
         self.pcs_prestados = []
+        """
         sede.eliminar_salas(sede.get_salas())
         sede.eliminar_copias(sede.get_copias())
         sede.eliminar_pcs(sede.get_pcs())
-
+        """
+        
     def get_sede(self):
         return self.sede
 
