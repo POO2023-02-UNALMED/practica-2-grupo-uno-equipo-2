@@ -5,7 +5,7 @@ from baseDatos import BaseDatos
 from prestamoRecursos import PrestamoRecursos
 from gestorAplicacion.paquete1.Libro import Libro
 from gestorAplicacion.paquete1.Computador import Computador
-from gestorAplicacion.paquete1.Biblioteca import *
+from gestorAplicacion.paquete1.BibliotecaDos import BibliotecaDos
 from gestorAplicacion.paquete1.Copia import Copia
 from gestorAplicacion.paquete1.PC import PC
 from gestorAplicacion.paquete1.Autor import Autor
@@ -308,8 +308,8 @@ if __name__ == "__main__":
     ]
 
     bibliotecas = [
-        Biblioteca("Efe Gomez", "Medellín"),
-        Biblioteca("Gabriel Garcia Marquez", "Bogota")
+        BibliotecaDos("Efe Gomez", "Medellín"),
+        BibliotecaDos("Gabriel Garcia Marquez", "Bogota")
     ]
 
     bibliotecas[0].añadir_sala(Sala(bibliotecas[0], "Auditorio 1", 30))

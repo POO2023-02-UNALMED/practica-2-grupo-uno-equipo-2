@@ -236,6 +236,7 @@ class BusquedaPorCriterio(Frame):
         self.opcionMaterial.bind("<<ComboboxSelected>>", func= self.buscar)
 
     def buscar(self, evento):
+        print(evento.get())
         self.frameCriterios = FieldFrame(self, "Criterios", ["hola", "chao"], "Valor")
         self.frameCriterios.grid(row=3, column=0, columnspan=2)
 
