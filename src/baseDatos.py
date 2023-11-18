@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import Frame, Label, messagebox
 from gestorAplicacion.paquete2.Sistema import *
 from gestorAplicacion.paquete1.Biblioteca import *
 from gestorAplicacion.paquete1.Recurso import *
@@ -7,12 +7,40 @@ from gestorAplicacion.paquete1.Libro import *
 from gestorAplicacion.paquete1.Computador import *
 from gestorAplicacion.paquete1.Copia import *
 from gestorAplicacion.paquete1.PC import *
-from main import *
 
+class BaseDatos(Frame):
 
-class Aplicacion:
-    def __init__(self, root):
+    def __init__(self, root, sistema):
+        super().__init__(root, height=70,width=500,bg="white", borderwidth = 10, highlightthickness=3, highlightbackground="#7c9933")
         self.root = root
+        self.sistema = sistema
+
+        self.sede_var = tk.StringVar()
+        self.accion_var = tk.StringVar()
+        self.recurso_var = tk.StringVar()
+
+        self.frame = tk.Frame(self.root, height=70, width=500, bg="white", borderwidth=10, highlightthickness=3, highlightbackground="#7c9933")
+        self.frame.grid(row=0, column=0)
+
+        tk.Label(self.frame, text="Sede:").pack()
+        tk.OptionMenu(self.frame, self.sede_var, *['Medellín', 'Bogotá']).pack()
+
+        tk.Label(self.frame, text="Acción:").pack()
+        tk.Radiobutton(self.frame, text='Agregar', variable=self.accion_var, value='Agregar').pack()
+        tk.Radiobutton(self.frame, text='Eliminar', variable=self.accion_var, value='Eliminar').pack()
+
+        tk.Label(self.frame, text="Recurso:").pack()
+        tk.OptionMenu(self.frame, self.recurso_var, *['Libro', 'Copia', 'Computador', 'PC']).pack()
+
+        tk.Button(self.frame, text='Ejecutar', command=self.ejecutar).pack()
+    
+    def kill(self, frame):
+        if frame.winfo_children():
+            for widget in frame.winfo_children():
+                    widget.destroy()
+
+    """
+        def __init__(self, root, sistema):
         self.bibliotecas = sistema.get_bibliotecas()
         self.crear_interfaz()
 
@@ -75,7 +103,4 @@ class Aplicacion:
                 else:
                     messagebox.showerror('Error', f'No hay {recurso} en la biblioteca de {sede} para eliminar')
 
-
-root = tk.Tk()
-app = Aplicacion(root)
-root.mainloop()
+"""

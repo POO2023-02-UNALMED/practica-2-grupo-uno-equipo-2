@@ -1,9 +1,11 @@
 from tkinter import *
 from tkinter import messagebox
+from baseDatos import BaseDatos
+#from baseDatos import Aplicacion
 from prestamoRecursos import PrestamoRecursos
 from gestorAplicacion.paquete1.Libro import Libro
 from gestorAplicacion.paquete1.Computador import Computador
-from gestorAplicacion.paquete1.Biblioteca import Biblioteca
+from gestorAplicacion.paquete1.Biblioteca import *
 from gestorAplicacion.paquete1.Copia import Copia
 from gestorAplicacion.paquete1.PC import PC
 from gestorAplicacion.paquete1.Autor import Autor
@@ -190,6 +192,12 @@ class ventPrincipal(Tk):
                 p.grid(row=0, column=0, rowspan=2)
                 p.place(relx=0.5,rely=0.5,anchor="center")
 
+            def BaseDatos():
+                kill(self)
+                p = BaseDatos(self,sistema)
+                p.grid(row=0, column=0, rowspan=2)
+                p.place(relx=0.5,rely=0.5,anchor="center")
+
             def Funny():
                 respuesta = False
                 while(respuesta != True):
@@ -237,12 +245,11 @@ class ventPrincipal(Tk):
             menu2.add_command(label="Aplicacion",command=lambda: messagebox.showinfo("Aplicacion","Este sistema permite el control y administracion de la base de datos del sistema de bibliotecas de la Universidad Nacional. En este sistema encontraras funcionalidades para el prestamo de material de la biblioteca, para agregar/eliminar material y para gestionar tus reservas/multas."))
             menu2.add_command(label="Salir",command=lambda:Volver())
 
-
             menu3 = Menu(menuBar2)
             menuBar2.add_cascade(label="Procesos y Consultas",menu=menu3)
             menu3.add_command(label="Préstamo de Recursos",command= prestamoDeRecursos)
             menu3.add_command(label="Reserva de Recursos para Eventos",command= ReservaDeEvento)
-            menu3.add_command(label="Gestión Base de Datos",command=lambda: print(":)"))
+            menu3.add_command(label="Gestión Base de Datos",command= BaseDatos)
             menu3.add_command(label="Gestión de Prestamos y Reservas",command=lambda: print("si"))
             menu3.add_command(label="Gestión de Multas",command=lambda: print(":)"))
 
@@ -257,6 +264,7 @@ class ventPrincipal(Tk):
       
 if __name__ == "__main__":
     sistema = Sistema()
+    #app = Aplicacion(sistema)
 
     autor1 = Autor("Yuval Noah Harari", "Israel", "Historia")
     autor2 = Autor("J.K. Rowling", "Reino Unido", "Fantasía")
