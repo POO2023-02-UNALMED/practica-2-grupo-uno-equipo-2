@@ -1,8 +1,10 @@
 from tkinter import *
 from tkinter import messagebox
-from baseDatos import BaseDeDatos
 #from baseDatos import Aplicacion
 from prestamoRecursos import PrestamoRecursos
+from reservaEvento import ReservaEvento
+from baseDatos import BaseDeDatos
+from gestionPrestamos import GestionPrestamo
 from gestorAplicacion.paquete1.Libro import Libro
 from gestorAplicacion.paquete1.Computador import Computador
 from gestorAplicacion.paquete1.BibliotecaDos import BibliotecaDos
@@ -12,7 +14,9 @@ from gestorAplicacion.paquete1.Autor import Autor
 from gestorAplicacion.paquete1.Sala import Sala
 from gestorAplicacion.paquete2.Sistema import Sistema
 from gestorAplicacion.paquete2.Usuario import Usuario
-from reservaEvento import ReservaEvento
+from gestorAplicacion.paquete2.Prestamo import Prestamo
+from datetime import date
+
 
 
 class ventanaInicial(Tk):
@@ -198,6 +202,12 @@ class ventPrincipal(Tk):
                 p.grid(row=0, column=0, rowspan=2)
                 p.place(relx=0.5,rely=0.5,anchor="center")
 
+            def gestionPrestamos():
+                kill(self)
+                p = GestionPrestamo(self, sistema)
+                p.grid(row=0, column=0,rowspan=2)
+                p.place(relx=0.5,rely=0.5,anchor="center")
+
             def Funny():
                 respuesta = False
                 while(respuesta != True):
@@ -250,7 +260,7 @@ class ventPrincipal(Tk):
             menu3.add_command(label="Préstamo de Recursos",command= prestamoDeRecursos)
             menu3.add_command(label="Reserva de Recursos para Eventos",command= ReservaDeEvento)
             menu3.add_command(label="Gestión Base de Datos",command= BaseDatos)
-            menu3.add_command(label="Gestión de Prestamos y Reservas",command=lambda: print("si"))
+            menu3.add_command(label="Gestión de Prestamos y Reservas",command= gestionPrestamos)
             menu3.add_command(label="Gestión de Multas",command=lambda: print(":)"))
 
 
@@ -372,11 +382,15 @@ if __name__ == "__main__":
     bibliotecas[1].añadir_pc(PC(computadores[5], True, bibliotecas[1]))
     bibliotecas[1].añadir_pc(PC(computadores[5], True, bibliotecas[1]))
 
+    user = Usuario()
+    user.get_prestamos().append(Prestamo(user, Copia(12, libros[2], bibliotecas[1]), "Particular", date.today(), date(2023, 12, 31), bibliotecas[1]))
+    user.get_prestamos().append(Prestamo(user, PC(computadores[2], True, bibliotecas[1]), "Particular", date.today(), date(2023, 12, 31), bibliotecas[0]))
+
     sistema.set_autores(autores)
     sistema.set_bibliotecas(bibliotecas)
     sistema.set_computadores(computadores)
     sistema.set_libros(libros)
-    sistema.set_user(Usuario())
+    sistema.set_user(user)
 
 
 

@@ -4,12 +4,13 @@ from .Usuario import Usuario
 class Prestamo:
     numero_prestamos = 0  # Variable de clase para llevar un registro del número de préstamos
 
-    def __init__(self, usuario, tipo, fecha_inicio, fecha_fin, sede):
+    def __init__(self, usuario, materialPrestado, tipo, fecha_inicio, fecha_fin, sede):
         self.tipo = tipo
         self.usuario = usuario
         self.fecha_inicio = fecha_inicio
         self.fecha_fin = fecha_fin
         self.sede = sede
+        self.materialPrestado = materialPrestado
         # Generar un identificador único para el préstamo (puedes implementar esta lógica)
         self.id_prestamo = self.generar_identificador_unico()
         self.copias_prestadas = []
@@ -28,6 +29,12 @@ class Prestamo:
 
     def set_sala(self, sala):
         self.sala = sala
+
+    def set_fecha_fin(self, fecha_fin):
+        self.fecha_fin = fecha_fin
+    
+    def get_materialPrestado(self):
+        return self.materialPrestado
 
     def get_tipo(self):
         return self.tipo

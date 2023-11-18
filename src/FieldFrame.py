@@ -8,9 +8,15 @@ class FieldFrame(Frame):
         self.tituloCriterios = tituloCriterios
         self.criterios = criterios
         self.tituloValores = tituloValores
-        self.valores = []
+        if valores is None:
+            self.valores = []
+        else: 
+            self.valores = valores
         self.entradas = []
+        self.estado = "normal"
         self.habilitado = habilitado
+
+
 
         self.criteriosLabel = Label(self, text= self.tituloCriterios, bg="white")
         self.criteriosLabel.grid(row=0, column=0, padx= 50, pady= 10)
@@ -22,9 +28,14 @@ class FieldFrame(Frame):
             Label(self, text=self.criterios[i], bg="white").grid(row=(i+1), column = 0)
             valor = Entry(self, width=60)
             valor.grid(row=(i+1), column=1, padx= 50, pady= 10)
+            if self.valores:
+                valor.insert(0, valores[i])
             self.entradas.append(valor)
-
-        self.crearBoton("Limpiar campos", self.limpiarEntradas, 1)
+            if habilitado is not None:
+                    valor.configure(state = "disabled")
+            
+        if habilitado is None:
+            self.crearBoton("Limpiar campos", self.limpiarEntradas, 1)
         
 
     def crearBoton(self, texto, comando, col):
@@ -34,9 +45,12 @@ class FieldFrame(Frame):
         for entrada in self.entradas:
             entrada.delete(0, last=END)
 
-    def getValores(self, criterio):
-        index = self.criterios.index(criterio)
-        return self.entradas[index].get()
+    def getValores(self):
+        self.valores = [valor.get() for valor in self.entradas]
+
+    def getValue(self, criterio):
+        i = self.criterios.index(criterio)
+        return self.entradas[i].get()
     
     
 

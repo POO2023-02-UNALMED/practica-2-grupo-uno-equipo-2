@@ -4,6 +4,7 @@ from tkinter import messagebox
 from gestorAplicacion.paquete2.Prestamo import Prestamo
 from datetime import date
 from FieldFrame import FieldFrame
+from tkcalendar import Calendar
 
 class ReservaEvento(Frame):
 
@@ -22,10 +23,8 @@ class ReservaEvento(Frame):
 
         frame2 = Frame(self)
         frame2.grid(row=1,column=0)
-        descripcion = """
-                    En esta opcion podras realizar una reserva de evento en una de las salas de nuestras
-                    bibliotecas, ademas de esto, podras reservar material que pueda ser de utilidad en tu evento
-                    """
+        descripcion = """En esta opcion podras realizar una reserva de evento en una de las salas de nuestras bibliotecas, ademas 
+        de esto, podras reservar material que pueda ser de utilidad en tu evento"""
         
         Label(frame2, text=descripcion, bg="white", fg="black").grid(row=0,column=0)
 
@@ -33,16 +32,12 @@ class ReservaEvento(Frame):
         self.frame3.grid(row=2,column=0)
         self.basica = Button(self.frame3, text="Busqueda básica", command=self.funcBusquedaBasica)
         self.porCriterio = Button(self.frame3, text= "Busqueda por criterios", command=self.funcBusquedaPorCriterio)
-        self.porLista = Button(self.frame3, text= "Busqueda por lista")
+        self.porLista = Button(self.frame3, text= "Busqueda por lista", command=self.funcBusquedaPorLista)
         self.basica.grid(row=0,column=0, padx=50, pady=15)
         self.porCriterio.grid(row=0,column=1,padx=50, pady=15)
         self.porLista.grid(row=0, column=2, padx=50, pady=15)
         self.frame4 = Frame(self)
 
-
-
-    def reservarSala(self):
-        pass
 
     def funcBusquedaBasica(self):
         self.kill(self.frame4)
@@ -52,6 +47,11 @@ class ReservaEvento(Frame):
     def funcBusquedaPorCriterio(self):
         self.kill(self.frame4)
         self.frame4 = BusquedaPorCriterio(self, self.sistema)
+        self.frame4.grid(row=3, column=0)
+
+    def funcBusquedaPorLista(self):
+        self.kill(self.frame4)
+        self.frame4 = BusquedaPorLista(self, self.sistema)
         self.frame4.grid(row=3, column=0)
 
 
@@ -233,14 +233,279 @@ class BusquedaPorCriterio(Frame):
         Label(self, text="Seleccione el material que desea reservar para el evento: ").grid(row=2, column=0)
         self.opcionMaterial = ttk.Combobox(self, values=["Libro", "Computador"])
         self.opcionMaterial.grid(row=2, column=1)
-        self.opcionMaterial.bind("<<ComboboxSelected>>", func= self.buscar)
+        self.opcionMaterial.bind("<<ComboboxSelected>>", func= self.crearFields)
+        self.frameCriterios = Frame()
 
-    def buscar(self, evento):
-        print(evento.get())
-        self.frameCriterios = FieldFrame(self, "Criterios", ["hola", "chao"], "Valor")
-        self.frameCriterios.grid(row=3, column=0, columnspan=2)
+    def crearFields(self, evento):
+        self.kill(self.frameCriterios)
+        if self.opcionMaterial.get() == "Libro":
+            self.frameCriterios = FieldFrame(self, "Criterios", ["Nombre", "ID", "ISBN", "Autor", "Año"], "Valor")
+            self.frameCriterios.grid(row=3, column=0, columnspan=2)
+            self.frameCriterios.crearBoton("Buscar", self.buscar, 0)  
+        else:
+            self.frameCriterios = FieldFrame(self, "Criterios", ["Modelo", "ID", "Marca", "Gama"], "Valor")
+            self.frameCriterios.grid(row=3, column=0, columnspan=2)
+            self.frameCriterios.crearBoton("Buscar", self.buscar, 0)
+            
 
+    def buscar(self):
+        libroSel = None
+        computadorSel = None
+        if self.opcionMaterial.get() == "Libro":
+            self.frameCriterios.getValores()
+            self.valores = self.frameCriterios.valores
+            for libro in self.sistema.get_libros():
+                if (libro.get_nombre() == self.valores[0]) and (str(libro.get_id_recurso()) == self.valores[1]) and (libro.get_isbn() == self.valores[2]) and (libro.get_autor().get_nombre() == self.valores[3]) and (str(libro.get_año()) == self.valores[4]):
+                    libroSel = libro
+                    respuesta = messagebox.askyesno("Confirmar", f"¿Desea reservar '{libroSel.get_nombre()}'?")
+                    if not respuesta: 
+                        self.valores = []
+                        return
+            if not libroSel:
+                self.valores = []
+                return messagebox.showerror("Error", "la biblioteca no cuenta con este recurso")
+            self.kill(self)
+            self.reservarRecurso(libroSel)
+        else:
+            self.frameCriterios.getValores()
+            self.valores = self.frameCriterios.valores
+            for computador in self.sistema.get_computadores():
+                print(computador.get_nombre() + self.valores[0])
+                if (computador.get_nombre() == self.valores[0]) and (str(computador.get_id_recurso()) == self.valores[1]) and (computador.get_marca() == self.valores[2]) and (computador.get_gama() == self.valores[3]):
+                    computadorSel = computador
+                    respuesta = messagebox.askyesno("Confirmar", f"¿Desea reservar '{computadorSel.get_nombre()}'?")
+                    if not respuesta: 
+                        self.valores = []
+                        return
+            if not computadorSel:
+                self.valores = []
+                return messagebox.showerror("Error", "la biblioteca no cuenta con este recurso")
+            self.kill(self)
+            self.reservarRecurso(computadorSel)
+
+    def reservarRecurso(self, recurso):
+        sedes = []
+        for biblioteca in self.sistema.get_bibliotecas():
+            for copia in biblioteca.get_copias():
+                if recurso.get_nombre() == copia.get_nombre() and biblioteca.get_nombre() not in sedes:
+                    sedes.append(biblioteca.get_nombre())
+
+        Label(self, text="Reserva de recurso", font=("Arial", 30), bg="white", fg="black").grid(row=3, column=0, columnspan=2)
+        Label(self, text= f"Seleccione la sede en la cual desea realizar el prestamo: ", bg="white", fg="black").grid(row=4,column=0, columnspan=2)
+        opcionSede = ttk.Combobox(self, values=sedes, foreground="white", state="readonly")
+        opcionSede.grid(row=5, column=0, columnspan=2) 
+        sedeSeleccionada = None                            
+        hur = Label(self, text= "Ingrese la fecha hasta la cual desea realizar el prestamo: ", bg="white", fg="black")
+        hur.grid(row=6,column=0, columnspan=2)
+        cal = Calendar(self, mindate=date.today())
+        cal.grid(row=7,column=0, columnspan=2)
+
+        fechaSeleccionada = None
+        def seleccionarFecha(event):
+            global fechaSeleccionada
+            fechaSeleccionada = cal.get_date()
+        cal.bind("<<CalendarSelected>>", seleccionarFecha)
+
+        def realizarReserva():
+            sedeSel = opcionSede.get()
+            for sede in self.sistema.get_bibliotecas():
+                if sede.get_nombre() == sedeSel:
+                    sedeSel = sede
+            for copia in sedeSel.get_copias():
+                if copia.get_nombre() == recurso.get_nombre():
+                    copiaSel = copia 
+            self.sistema.get_user().get_multas().append(Prestamo(self.sistema.get_user(), "Particular", date.today(), fechaSeleccionada, sedeSel))
+            sedeSel.get_copias().remove(copiaSel)
                 
+        botonReservar = Button(self, text="Reservar", command=realizarReserva)
+        botonReservar.grid(row=8, column=0, columnspan=2)
+
+
+class BusquedaPorLista(Frame):
+    def __init__(self, root, sistema):
+        super().__init__(root, width=1100, height=700, bg="white")
+        self.root = root
+        self.sistema = sistema
+        self.nombreSedes = [biblioteca.get_nombre() for biblioteca in sistema.get_bibliotecas()]
+        self.palabraLibro = StringVar(value="Libro")
+        Label(self, text= "Seleccione la sede en la que desea realizar su evento: ", bg="white").grid(row=0, column=0)
+        self.sedeSel = None 
+        self.sedeSelObj = None
+        self.salaSelObj = None
+        self.salas = ttk.Combobox(self, values=self.nombreSedes, foreground="black", state="readonly")
+        self.salas.grid(row=0,column=1)
+        self.salas.bind("<<ComboboxSelected>>", func= self.sede)
+    
+    def kill(self, frame):
+        if frame.winfo_children():
+            for widget in frame.winfo_children():
+                    widget.destroy()
+
+    def sede(self, event):
+        self.sedeSel = self.salas.get()
+        for biblioteca in self.sistema.get_bibliotecas():
+                if biblioteca.get_nombre() == self.sedeSel:
+                  self.sedeSelObj = biblioteca     
+        Label(self, text="Las salas disponibles para evento en esta biblioteca son:").grid(row=1, column=0)
+        self.opciones = ttk.Combobox(self, values=self.sedeSelObj.get_salas())
+        self.opciones.grid(row=1, column=1)
+        self.opciones.bind("<<ComboboxSelected>>", func= self.sala)
+
+    def sala(self, evento):
+        self.salaSel = self.opciones.get()
+        for sala in self.sedeSelObj.get_salas():
+                if sala.get_nombre() == self.salaSel:
+                  self.salaSelObj = sala
+        confirmacion = messagebox.askyesno(title= "Confirmación", message=f"Deseas Reservar el {self.salaSelObj.get_nombre()} con capacidad para {int(self.salaSelObj.get_capacidad())} personas?")
+        if not confirmacion:
+            return
+        Label(self, text="Seleccione el material que desea reservar para el evento: ").grid(row=2, column=0)
+        self.opcionMaterial = ttk.Combobox(self, values=["Libro", "Computador"])
+        self.opcionMaterial.grid(row=2, column=1)
+        self.opcionMaterial.bind("<<ComboboxSelected>>", func= self.computadorOLibro)
+
+    def computadorOLibro(self, evento):
+        if self.opcionMaterial.get() == "Libro":
+            self.kill(self)
+            Label(self, text="Seleccione un libro de la siguiente lista: ", font=("Arial", 11), bg="white").grid(row=1,column=0, columnspan=2, pady=5)
+            lista = Text(self, border=False, font=("Arial", 11), borderwidth=2, highlightthickness=3, highlightbackground="gray")
+            lista.grid(row=2, column=0, columnspan=2, pady=5)
+            lista.delete("1.0", "end")
+            listaLibros = [libro.get_nombre() for libro in self.sistema.get_libros()]
+            lista.config(height=10)
+            listaLibrosString = ""
+            for i, titulo in enumerate(listaLibros):
+                listaLibrosString += f"{i}. {titulo} \n"
+            lista.insert(INSERT, listaLibrosString)
+            self.seleccion = FieldFrame(self, "Criterio", ["ID: "], "Valor")
+            self.seleccion.grid(row=3, column =0, columnspan=2, pady=5)
+            self.seleccion.crearBoton("Enviar", self.reservarLibro, 0)
+        else:
+            self.kill(self)
+            Label(self, text="Seleccione un computador de la siguiente lista: ", font=("Arial", 11), bg="white").grid(row=1,column=0, columnspan=2, pady=5)
+            lista = Text(self, border=False, font=("Arial", 11), borderwidth=2, highlightthickness=3, highlightbackground="gray")
+            lista.grid(row=2, column=0, columnspan=2, pady=5)
+            lista.delete("1.0", "end")
+            listaComputadores = [computador.get_nombre() for computador in self.sistema.get_computadores()]
+            lista.config(height=10)
+            listaComputadoresString = ""
+            for i, titulo in enumerate(listaComputadores):
+                listaComputadoresString += f"{i}. {titulo} \n"
+            lista.insert(INSERT, listaComputadoresString)
+            self.seleccion = FieldFrame(self, "Criterio", ["ID: "], "Valor")
+            self.seleccion.grid(row=3, column =0, columnspan=2, pady=5)
+            self.seleccion.crearBoton("Enviar", self.reservarComputador, 0)
+    
+    def reservarLibro(self):
+        self.LibroSel = None
+        if self.seleccion.getValue("ID: ") == "":
+            messagebox.showwarning(title="Error", message="El campo está vacío")
+            return
+        try:
+            if int(self.seleccion.getValue("ID: ")) < 0:
+                raise ValueError()
+            self.libroSel = self.sistema.get_libros()[int(self.seleccion.getValue("ID: "))]
+            sedes = []
+            self.kill(self)
+            for biblioteca in self.sistema.get_bibliotecas():
+                for copia in biblioteca.get_copias():
+                    if self.libroSel.get_nombre() == copia.get_nombre() and biblioteca.get_nombre() not in sedes:
+                        sedes.append(biblioteca.get_nombre())
+
+            Label(self, text="Reserva de recurso", font=("Arial", 30), bg="white", fg="black").grid(row=0, column=0, columnspan=2)
+            Label(self, text= f"Seleccione la sede en la cual desea realizar el prestamo: ", bg="white", fg="black").grid(row=1,column=0, columnspan=2)
+            opcionSede = ttk.Combobox(self, values=sedes, foreground="white", state="readonly")
+            opcionSede.grid(row=2, column=0, columnspan=2) 
+            sedeSeleccionada = None                            
+            hur = Label(self, text= "Ingrese la fecha hasta la cual desea realizar el prestamo: ", bg="white", fg="black")
+            hur.grid(row=3,column=0, columnspan=2)
+            cal = Calendar(self, mindate=date.today())
+            cal.grid(row=4,column=0, columnspan=2)
+
+            fechaSeleccionada = None
+            def seleccionarFecha(event):
+                global fechaSeleccionada
+                fechaSeleccionada = cal.get_date()
+            cal.bind("<<CalendarSelected>>", seleccionarFecha)
+
+            def realizarReserva():
+                sedeSel = opcionSede.get()
+                for sede in self.sistema.get_bibliotecas():
+                    if sede.get_nombre() == sedeSel:
+                        sedeSel = sede
+                for copia in sedeSel.get_copias():
+                    if copia.get_nombre() == self.libroSel.get_nombre():
+                        copiaSel = copia 
+                self.sistema.get_user().get_multas().append(Prestamo(self.sistema.get_user(), "Particular", date.today(), fechaSeleccionada, sedeSel))
+                sedeSel.get_copias().remove(copiaSel)
+                messagebox.askokcancel(title="Reserva realizada", message="¡Su reserva ha sido realizada con exito! No olvide devolver su recurso :)")
+
+            botonReservar = Button(self, text="Reservar", command=realizarReserva)
+            botonReservar.grid(row=5, column=0, columnspan=2)
+
+
+            
+        except (IndexError, ValueError):
+            messagebox.showwarning(title="Error", message="Valor incorrecto. Por favor, seleccione un numero de la lista")
+
+    
+    
+    
+    def reservarComputador(self):
+        self.computadorSel = None
+        if self.seleccion.getValue("ID: ") == "":
+            messagebox.showwarning(title="Error", message="El campo está vacío")
+            return
+        try:
+            if int(self.seleccion.getValue("ID: ")) < 0:
+                raise ValueError()
+            self.computadorSel = self.sistema.get_computadores()[int(self.seleccion.getValue("ID: "))]
+            sedes = []
+            self.kill(self)
+            for biblioteca in self.sistema.get_bibliotecas():
+                for pc in biblioteca.get_PCs():
+                    if self.computadorSel.get_nombre() == pc.get_nombre() and biblioteca.get_nombre() not in sedes:
+                        sedes.append(biblioteca.get_nombre())
+
+            Label(self, text="Reserva de recurso", font=("Arial", 30), bg="white", fg="black").grid(row=0, column=0, columnspan=2)
+            Label(self, text= f"Seleccione la sede en la cual desea realizar el prestamo: ", bg="white", fg="black").grid(row=1,column=0, columnspan=2)
+            opcionSede = ttk.Combobox(self, values=sedes, foreground="white", state="readonly")
+            opcionSede.grid(row=2, column=0, columnspan=2) 
+            sedeSeleccionada = None                            
+            hur = Label(self, text= "Ingrese la fecha hasta la cual desea realizar el prestamo: ", bg="white", fg="black")
+            hur.grid(row=3,column=0, columnspan=2)
+            cal = Calendar(self, mindate=date.today())
+            cal.grid(row=4,column=0, columnspan=2)
+
+            fechaSeleccionada = None
+            def seleccionarFecha(event):
+                global fechaSeleccionada
+                fechaSeleccionada = cal.get_date()
+            cal.bind("<<CalendarSelected>>", seleccionarFecha)
+
+            def realizarReserva():
+                sedeSel = opcionSede.get()
+                for sede in self.sistema.get_bibliotecas():
+                    if sede.get_nombre() == sedeSel:
+                        sedeSel = sede
+                for pc in sedeSel.get_PCs():
+                    if pc.get_nombre() == self.computadorSel.get_nombre():
+                        pcSel = pc
+                self.sistema.get_user().get_multas().append(Prestamo(self.sistema.get_user(), "Particular", date.today(), fechaSeleccionada, sedeSel))
+                sedeSel.get_PCs().remove(pcSel)
+                messagebox.askokcancel(title="Reserva realizada", message="¡Su reserva ha sido realizada con exito! No olvide devolver su recurso :)")
+            botonReservar = Button(self, text="Reservar", command=realizarReserva)
+            botonReservar.grid(row=5, column=0, columnspan=2)
+            
+
+        except (IndexError, ValueError):
+            messagebox.showwarning(title="Error", message="Valor incorrecto. Por favor, seleccione un numero de la lista")
+
+
+
+
+        
+
 
 
 
