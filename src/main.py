@@ -1,6 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
-from baseDatos import BaseDatos
+from baseDatos import BaseDeDatos
 #from baseDatos import Aplicacion
 from prestamoRecursos import PrestamoRecursos
 from gestorAplicacion.paquete1.Libro import Libro
@@ -194,7 +194,7 @@ class ventPrincipal(Tk):
 
             def BaseDatos():
                 kill(self)
-                p = BaseDatos(self,sistema)
+                p = BaseDeDatos(self,sistema)
                 p.grid(row=0, column=0, rowspan=2)
                 p.place(relx=0.5,rely=0.5,anchor="center")
 

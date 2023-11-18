@@ -8,7 +8,7 @@ from gestorAplicacion.paquete1.Computador import *
 from gestorAplicacion.paquete1.Copia import *
 from gestorAplicacion.paquete1.PC import *
 
-class BaseDatos(Frame):
+class BaseDeDatos(Frame):
 
     def __init__(self, root, sistema):
         super().__init__(root, height=70,width=500,bg="white", borderwidth = 10, highlightthickness=3, highlightbackground="#7c9933")
@@ -19,20 +19,132 @@ class BaseDatos(Frame):
         self.accion_var = tk.StringVar()
         self.recurso_var = tk.StringVar()
 
-        self.frame = tk.Frame(self.root, height=70, width=500, bg="white", borderwidth=10, highlightthickness=3, highlightbackground="#7c9933")
-        self.frame.grid(row=0, column=0)
+        frame1 = Frame(self, bg="#7c9933")
+        frame1.grid(row=0, column=0)
+        titulo = Label(frame1, text="Gestión de Base de Datos", fg="black", bg="white")
+        titulo.pack()
 
-        tk.Label(self.frame, text="Sede:").pack()
-        tk.OptionMenu(self.frame, self.sede_var, *['Medellín', 'Bogotá']).pack()
 
-        tk.Label(self.frame, text="Acción:").pack()
-        tk.Radiobutton(self.frame, text='Agregar', variable=self.accion_var, value='Agregar').pack()
-        tk.Radiobutton(self.frame, text='Eliminar', variable=self.accion_var, value='Eliminar').pack()
+        frame2 = Frame(self)
+        frame2.grid(row=1,column=0)
+        descripcion = """
+                    En este apartado podrás realizar cambios en la Base de Datos
+                    de la biblioteca, añadiendo o eliminando recursos.
+                    """
+        
+        Label(frame2, text=descripcion, bg="white", fg="black").grid(row=0,column=0)
 
-        tk.Label(self.frame, text="Recurso:").pack()
-        tk.OptionMenu(self.frame, self.recurso_var, *['Libro', 'Copia', 'Computador', 'PC']).pack()
+        frame3 = Frame(self, bg="white")
+        frame3.grid(row=2, column=0)
+        tk.Label(frame3, text="Sede:", bg="white").pack()
+        tk.OptionMenu(frame3, self.sede_var, *['Medellín', 'Bogotá']).pack()
 
-        tk.Button(self.frame, text='Ejecutar', command=self.ejecutar).pack()
+        tk.Label(frame3, text="Acción:").pack()
+        tk.Radiobutton(frame3, text='Agregar', variable=self.accion_var, value='Agregar').pack()
+        tk.Radiobutton(frame3, text='Eliminar', variable=self.accion_var, value='Eliminar').pack()
+
+        tk.Label(frame3, text="Recurso:").pack()
+        tk.OptionMenu(frame3, self.recurso_var, *['Libro', 'Copia', 'Computador', 'PC']).pack()
+
+        self.campos = []  # Esta lista almacenará los campos de entrada actuales
+
+        self.accion_var.trace('w', lambda *args: self.actualizar_campos(frame3))
+        self.recurso_var.trace('w', lambda *args: self.actualizar_campos(frame3))
+
+    def actualizar_campos(self, frame):
+        # Elimina los campos de entrada actuales
+        for campo in self.campos:
+            campo.destroy()
+        self.campos = []
+
+        accion = self.accion_var.get()
+        recurso = self.recurso_var.get()
+
+        if accion == 'Agregar':
+            if recurso == 'Libro':
+                # Crea y empaqueta los campos de entrada para agregar un libro
+                self.campos.append(tk.Label(frame, text="Nombre del libro:"))
+                self.campos[-1].pack()
+                self.campos.append(tk.Entry(frame))
+                self.campos[-1].pack()
+
+                self.campos.append(tk.Label(frame, text="ID del recurso:"))
+                self.campos[-1].pack()
+                self.campos.append(tk.Entry(frame))
+                self.campos[-1].pack()
+
+                self.campos.append(tk.Label(frame, text="ISBN:"))
+                self.campos[-1].pack()
+                self.campos.append(tk.Entry(frame))
+                self.campos[-1].pack()
+
+                self.campos.append(tk.Label(frame, text="Autor:"))
+                self.campos[-1].pack()
+                self.campos.append(tk.Entry(frame))
+                self.campos[-1].pack()
+
+                self.campos.append(tk.Label(frame, text="Año:"))
+                self.campos[-1].pack()
+                self.campos.append(tk.Entry(frame))
+                self.campos[-1].pack()
+
+            elif recurso == 'Copia':
+                # Crea y empaqueta los campos de entrada para agregar una copia
+                self.campos.append(tk.Label(frame, text="ID de la copia:"))
+                self.campos[-1].pack()
+                self.campos.append(tk.Entry(frame))
+                self.campos[-1].pack()
+
+                self.campos.append(tk.Label(frame, text="Libro:"))  # Esto debería ser una lista desplegable con todos los libros
+                self.campos[-1].pack()
+                self.campos.append(tk.Entry(frame))
+                self.campos[-1].pack()
+
+                self.campos.append(tk.Label(frame, text="Ubicación:"))  # Esto debería ser una lista desplegable con todas las sedes
+                self.campos[-1].pack()
+                self.campos.append(tk.Entry(frame))
+                self.campos[-1].pack()
+
+            elif recurso == 'Computador':
+                # Crea y empaqueta los campos de entrada para agregar un computador
+                self.campos.append(tk.Label(frame, text="Nombre del computador:"))
+                self.campos[-1].pack()
+                self.campos.append(tk.Entry(frame))
+                self.campos[-1].pack()
+
+                self.campos.append(tk.Label(frame, text="ID del recurso:"))
+                self.campos[-1].pack()
+                self.campos.append(tk.Entry(frame))
+                self.campos[-1].pack()
+
+                self.campos.append(tk.Label(frame, text="Marca:"))
+                self.campos[-1].pack()
+                self.campos.append(tk.Entry(frame))
+                self.campos[-1].pack()
+
+                self.campos.append(tk.Label(frame, text="Gama:"))
+                self.campos[-1].pack()
+                self.campos.append(tk.Entry(frame))
+                self.campos[-1].pack()
+
+            elif recurso == 'PC':
+                # Crea y empaqueta los campos de entrada para agregar un PC
+                self.campos.append(tk.Label(frame, text="ID del PC:"))
+                self.campos[-1].pack()
+                self.campos.append(tk.Entry(frame))
+                self.campos[-1].pack()
+
+                self.campos.append(tk.Label(frame, text="Modelo:"))  # Esto debería ser una lista desplegable con todos los computadores
+                self.campos[-1].pack()
+                self.campos.append(tk.Entry(frame))
+                self.campos[-1].pack()
+
+                self.campos.append(tk.Label(frame, text="Ubicación:"))  # Esto debería ser una lista desplegable con todas las sedes
+                self.campos[-1].pack()
+                self.campos.append(tk.Entry(frame))
+                self.campos[-1].pack()
+
+        # tk.Button(frame3, text='Ejecutar', command=self.ejecutar).pack()
     
     def kill(self, frame):
         if frame.winfo_children():
