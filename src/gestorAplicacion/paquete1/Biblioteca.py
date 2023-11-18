@@ -35,7 +35,10 @@ class Biblioteca:
 
     def set_copias(self, copias):
         self.copias = copias
-
+    
+    def get_PCs(self):
+        return self.pcs
+    
     def get_computadores(self):
         return self.computadores
 
