@@ -51,6 +51,33 @@ class BaseDeDatos(Frame):
         self.accion_var.trace('w', lambda *args: self.actualizar_campos(frame3))
         self.recurso_var.trace('w', lambda *args: self.actualizar_campos(frame3))
 
+        frame4 = Frame(self, bg="white")
+        frame4.grid(row=3, column=0)
+        tk.Button(frame4, text='Ejecutar', command= lambda: self.ejecutar_cambio()).pack()
+
+    def ejecutar_cambio(self):
+        accion = self.accion_var.get()
+        recurso = self.recurso_var.get()
+
+        if accion == "Agregar":
+            if recurso == "Libro":
+                pass
+            elif recurso == "Copia":
+                pass
+            elif recurso == "Computador":
+                pass
+            elif recurso == "PC":
+                pass
+        elif accion == "Eliminar":
+            if recurso == "Libro":
+                pass
+            elif recurso == "Copia":
+                pass
+            elif recurso == "Computador":
+                pass
+            elif recurso == "PC":
+                pass
+
     def actualizar_campos(self, frame):
         # Elimina los campos de entrada actuales
         for campo in self.campos:
@@ -143,7 +170,27 @@ class BaseDeDatos(Frame):
                 self.campos[-1].pack()
                 self.campos.append(tk.Entry(frame))
                 self.campos[-1].pack()
-
+        elif accion == "Eliminar":
+            if recurso == "Libro":
+                self.campos.append(tk.Label(frame, text="Seleccione Libro a Eliminar, Esto Eliminará Todas Sus Copias"))  # Esto debería ser una lista desplegable con todos los computadores
+                self.campos[-1].pack()
+                self.campos.append(tk.Entry(frame))
+                self.campos[-1].pack()
+            elif recurso == "Copia":
+                self.campos.append(tk.Label(frame, text="Seleccione Copia a Eliminar"))  # Esto debería ser una lista desplegable con todos los computadores
+                self.campos[-1].pack()
+                self.campos.append(tk.Entry(frame))
+                self.campos[-1].pack()
+            elif recurso == "Computador":
+                self.campos.append(tk.Label(frame, text="Seleccione Computador a Eliminar, Esto Eliminará Los PC De Este Modelo"))  # Esto debería ser una lista desplegable con todos los computadores
+                self.campos[-1].pack()
+                self.campos.append(tk.Entry(frame))
+                self.campos[-1].pack()
+            elif recurso == "PC":
+                self.campos.append(tk.Label(frame, text="Seleccione PC a Eliminar"))  # Esto debería ser una lista desplegable con todos los computadores
+                self.campos[-1].pack()
+                self.campos.append(tk.Entry(frame))
+                self.campos[-1].pack()
         # tk.Button(frame3, text='Ejecutar', command=self.ejecutar).pack()
     
     def kill(self, frame):
