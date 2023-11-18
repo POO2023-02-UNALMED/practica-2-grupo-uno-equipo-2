@@ -109,8 +109,50 @@ class Biblioteca:
     def lista_pcs_unicos(self):
         return list({pc.get_nombre(): pc for pc in self.pcs}.values())
 
-    def remover_copia(self, copia):
-        self.copias.remove(copia)
+class Biblioteca:
+    def __init__(self, sede):
+        self._sede = sede
+        self._libros = []
+        self._copias = []
+        self._computadores = []
+        self._pcs = []
 
-    def remover_pc(self, pc):
-        self.pcs.remove(pc)
+    # Getters
+    def get_sede(self):
+        return self._sede
+
+    def get_libros(self):
+        return self._libros
+
+    def get_copias(self):
+        return self._copias
+
+    def get_computadores(self):
+        return self._computadores
+
+    def get_pcs(self):
+        return self._pcs
+
+    def agregar_libro(self, libro):
+        self._libros.append(libro)
+
+    def eliminar_libro(self, libro):
+        self._libros.remove(libro)
+
+    def agregar_copia(self, copia):
+        self._copias.append(copia)
+
+    def eliminar_copia(self, copia):
+        self._copias.remove(copia)
+
+    def agregar_computador(self, computador):
+        self._computadores.append(computador)
+
+    def eliminar_computador(self, computador):
+        self._computadores.remove(computador)
+
+    def agregar_pc(self, pc):
+        self._pcs.append(pc)
+
+    def eliminar_pc(self, pc):
+        self._pcs.remove(pc)
