@@ -11,6 +11,9 @@ class Libro(Recurso):
         autor.get_obras().append(self)
         Libro.totalLibros += 1
     
+    def get_nombre(self):
+        return self.nombre
+    
     def get_isbn(self):
         return self.isbn
 
