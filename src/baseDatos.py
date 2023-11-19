@@ -92,21 +92,29 @@ class BaseDeDatos(Frame):
             if recurso == 'Libro':
                 # Crea y empaqueta los campos de entrada para agregar un libro
                 self.campos.append(Agregar(frame, "Criterios", ["Nombre", "ID", "ISBN", "Autor", "Año"], "Valor", self.sistema, "Libro"))
+                self.campos[-1].crearBoton("Aceptar", self.comprobar, 0)
+                self.campos[-1].crearBoton("Borrar", self.comprobar, 1)
                 self.campos[-1].pack()
 
             elif recurso == 'Copia':
                 # Crea y empaqueta los campos de entrada para agregar una copia
                 self.campos.append(Agregar(frame, "Criterios", ["ID", "Libro", "Ubicación"], "Valor", self.sistema, "Copia"))
+                self.campos[-1].crearBoton("Aceptar", self.comprobar, 0)
+                self.campos[-1].crearBoton("Borrar", self.comprobar, 1)
                 self.campos[-1].pack()
 
             elif recurso == 'Computador':
                 # Crea y empaqueta los campos de entrada para agregar un computador
                 self.campos.append(Agregar(frame, "Criterios", ["Nombre", "ID", "Marca", "Gama"], "Valor", self.sistema, "Computador"))
+                self.campos[-1].crearBoton("Aceptar", self.comprobar, 0)
+                self.campos[-1].crearBoton("Borrar", self.comprobar, 1)
                 self.campos[-1].pack()
 
             elif recurso == 'PC':
                 # Crea y empaqueta los campos de entrada para agregar un PC
                 self.campos.append(Agregar(frame, "Criterios", ["ID", "Modelo", "Ubicacion"], "Valor", self.sistema, "PC"))
+                self.campos[-1].crearBoton("Aceptar", self.comprobar, 0)
+                self.campos[-1].crearBoton("Borrar", self.comprobar, 1)
                 self.campos[-1].pack()
 
         elif accion == "Eliminar":
@@ -137,10 +145,12 @@ class BaseDeDatos(Frame):
             for widget in frame.winfo_children():
                     widget.destroy()
 
+    def comprobar(self):
+        pass
+
 class Agregar(FieldFrame):
     def __init__(self, root, criteriosTitulo, lista, valorTitulo, sistema, recurso):
         super().__init__(root, criteriosTitulo, lista, valorTitulo)
         self.sistema = sistema
         self.recurso = recurso
-        self.crearBoton("Aceptar", self.comprobar, 0)
-        self.crearBoton("Borrar", self.comprobar, 1)
+        
