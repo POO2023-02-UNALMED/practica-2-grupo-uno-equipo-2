@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import Frame, Label, messagebox
+from FieldFrame import FieldFrame
 from gestorAplicacion.paquete2.Sistema import *
 from gestorAplicacion.paquete1.Biblioteca import *
 from gestorAplicacion.paquete1.Recurso import *
@@ -90,86 +91,24 @@ class BaseDeDatos(Frame):
         if accion == 'Agregar':
             if recurso == 'Libro':
                 # Crea y empaqueta los campos de entrada para agregar un libro
-                self.campos.append(tk.Label(frame, text="Nombre del libro:"))
-                self.campos[-1].pack()
-                self.campos.append(tk.Entry(frame))
-                self.campos[-1].pack()
-
-                self.campos.append(tk.Label(frame, text="ID del recurso:"))
-                self.campos[-1].pack()
-                self.campos.append(tk.Entry(frame))
-                self.campos[-1].pack()
-
-                self.campos.append(tk.Label(frame, text="ISBN:"))
-                self.campos[-1].pack()
-                self.campos.append(tk.Entry(frame))
-                self.campos[-1].pack()
-
-                self.campos.append(tk.Label(frame, text="Autor:"))
-                self.campos[-1].pack()
-                self.campos.append(tk.Entry(frame))
-                self.campos[-1].pack()
-
-                self.campos.append(tk.Label(frame, text="Año:"))
-                self.campos[-1].pack()
-                self.campos.append(tk.Entry(frame))
+                self.campos.append(Agregar(frame, "Criterios", ["Nombre", "ID", "ISBN", "Autor", "Año"], "Valor", self.sistema, "Libro"))
                 self.campos[-1].pack()
 
             elif recurso == 'Copia':
                 # Crea y empaqueta los campos de entrada para agregar una copia
-                self.campos.append(tk.Label(frame, text="ID de la copia:"))
-                self.campos[-1].pack()
-                self.campos.append(tk.Entry(frame))
-                self.campos[-1].pack()
-
-                self.campos.append(tk.Label(frame, text="Libro:"))  # Esto debería ser una lista desplegable con todos los libros
-                self.campos[-1].pack()
-                self.campos.append(tk.Entry(frame))
-                self.campos[-1].pack()
-
-                self.campos.append(tk.Label(frame, text="Ubicación:"))  # Esto debería ser una lista desplegable con todas las sedes
-                self.campos[-1].pack()
-                self.campos.append(tk.Entry(frame))
+                self.campos.append(Agregar(frame, "Criterios", ["ID", "Libro", "Ubicación"], "Valor", self.sistema, "Copia"))
                 self.campos[-1].pack()
 
             elif recurso == 'Computador':
                 # Crea y empaqueta los campos de entrada para agregar un computador
-                self.campos.append(tk.Label(frame, text="Nombre del computador:"))
-                self.campos[-1].pack()
-                self.campos.append(tk.Entry(frame))
-                self.campos[-1].pack()
-
-                self.campos.append(tk.Label(frame, text="ID del recurso:"))
-                self.campos[-1].pack()
-                self.campos.append(tk.Entry(frame))
-                self.campos[-1].pack()
-
-                self.campos.append(tk.Label(frame, text="Marca:"))
-                self.campos[-1].pack()
-                self.campos.append(tk.Entry(frame))
-                self.campos[-1].pack()
-
-                self.campos.append(tk.Label(frame, text="Gama:"))
-                self.campos[-1].pack()
-                self.campos.append(tk.Entry(frame))
+                self.campos.append(Agregar(frame, "Criterios", ["Nombre", "ID", "Marca", "Gama"], "Valor", self.sistema, "Computador"))
                 self.campos[-1].pack()
 
             elif recurso == 'PC':
                 # Crea y empaqueta los campos de entrada para agregar un PC
-                self.campos.append(tk.Label(frame, text="ID del PC:"))
-                self.campos[-1].pack()
-                self.campos.append(tk.Entry(frame))
+                self.campos.append(Agregar(frame, "Criterios", ["ID", "Modelo", "Ubicacion"], "Valor", self.sistema, "PC"))
                 self.campos[-1].pack()
 
-                self.campos.append(tk.Label(frame, text="Modelo:"))  # Esto debería ser una lista desplegable con todos los computadores
-                self.campos[-1].pack()
-                self.campos.append(tk.Entry(frame))
-                self.campos[-1].pack()
-
-                self.campos.append(tk.Label(frame, text="Ubicación:"))  # Esto debería ser una lista desplegable con todas las sedes
-                self.campos[-1].pack()
-                self.campos.append(tk.Entry(frame))
-                self.campos[-1].pack()
         elif accion == "Eliminar":
             if recurso == "Libro":
                 self.campos.append(tk.Label(frame, text="Seleccione Libro a Eliminar, Esto Eliminará Todas Sus Copias"))  # Esto debería ser una lista desplegable con todos los computadores
@@ -198,68 +137,10 @@ class BaseDeDatos(Frame):
             for widget in frame.winfo_children():
                     widget.destroy()
 
-    """
-        def __init__(self, root, sistema):
-        self.bibliotecas = sistema.get_bibliotecas()
-        self.crear_interfaz()
-
-    def crear_interfaz(self):
-        self.sede_var = tk.StringVar()
-        self.accion_var = tk.StringVar()
-        self.recurso_var = tk.StringVar()
-
-        frame = tk.Frame(self.root, height=70, width=500, bg="white", borderwidth=10, highlightthickness=3, highlightbackground="#7c9933")
-        frame.pack()
-
-        tk.Label(frame, text="Sede:").pack()
-        tk.OptionMenu(frame, self.sede_var, *['Medellín', 'Bogotá']).pack()
-
-        tk.Label(frame, text="Acción:").pack()
-        tk.Radiobutton(frame, text='Agregar', variable=self.accion_var, value='Agregar').pack()
-        tk.Radiobutton(frame, text='Eliminar', variable=self.accion_var, value='Eliminar').pack()
-
-        tk.Label(frame, text="Recurso:").pack()
-        tk.OptionMenu(frame, self.recurso_var, *['Libro', 'Copia', 'Computador', 'PC']).pack()
-
-        tk.Button(frame, text='Ejecutar', command=self.ejecutar).pack()
-
-
-    def ejecutar(self):
-        sede = self.sede_var.get()
-        accion = self.accion_var.get()
-        recurso = self.recurso_var.get()
-        biblioteca = next((b for b in self.bibliotecas if b.get_sede() == sede), None)
-        if biblioteca:
-            if accion == 'Agregar':
-                if recurso == 'Libro':
-                    biblioteca.agregar_libro(Recurso(recurso))
-                elif recurso == 'Copia':
-                    biblioteca.agregar_copia(Recurso(recurso))
-                elif recurso == 'Computador':
-                    biblioteca.agregar_computador(Recurso(recurso))
-                elif recurso == 'PC':
-                    biblioteca.agregar_pc(Recurso(recurso))
-                messagebox.showinfo('Información', f'Se agregó un {recurso} a la biblioteca de {sede}')
-            elif accion == 'Eliminar':
-                if recurso == 'Libro':
-                    recurso_a_eliminar = next((r for r in biblioteca.libros if r.tipo == recurso), None)
-                    if recurso_a_eliminar:
-                        biblioteca.eliminar_libro(recurso_a_eliminar)
-                elif recurso == 'Copia':
-                    recurso_a_eliminar = next((r for r in biblioteca.copias if r.tipo == recurso), None)
-                    if recurso_a_eliminar:
-                        biblioteca.eliminar_copia(recurso_a_eliminar)
-                elif recurso == 'Computador':
-                    recurso_a_eliminar = next((r for r in biblioteca.computadores if r.tipo == recurso), None)
-                    if recurso_a_eliminar:
-                        biblioteca.eliminar_computador(recurso_a_eliminar)
-                elif recurso == 'PC':
-                    recurso_a_eliminar = next((r for r in biblioteca.pcs if r.tipo == recurso), None)
-                    if recurso_a_eliminar:
-                        biblioteca.eliminar_pc(recurso_a_eliminar)
-                if recurso_a_eliminar:
-                    messagebox.showinfo('Información', f'Se eliminó un {recurso} de la biblioteca de {sede}')
-                else:
-                    messagebox.showerror('Error', f'No hay {recurso} en la biblioteca de {sede} para eliminar')
-
-"""
+class Agregar(FieldFrame):
+    def __init__(self, root, criteriosTitulo, lista, valorTitulo, sistema, recurso):
+        super().__init__(root, criteriosTitulo, lista, valorTitulo)
+        self.sistema = sistema
+        self.recurso = recurso
+        self.crearBoton("Aceptar", self.comprobar, 0)
+        self.crearBoton("Borrar", self.comprobar, 1)
