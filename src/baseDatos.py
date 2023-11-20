@@ -50,6 +50,8 @@ class BaseDeDatos(Frame):
 
         self.campos = []  # Esta lista almacenará los campos de entrada actuales
 
+        self.sede_var.trace('w', lambda *args: self.actualizar_campos(frame3))
+        self.ejemplar_var.trace('w', lambda *args: self.actualizar_campos(frame3))
         self.accion_var.trace('w', lambda *args: self.actualizar_campos(frame3))
         self.recurso_var.trace('w', lambda *args: self.actualizar_campos(frame3))
 
@@ -87,6 +89,7 @@ class BaseDeDatos(Frame):
 
         accion = self.accion_var.get()
         recurso = self.recurso_var.get()
+        sede = self.sede_var.get()
 
         if accion == 'Agregar':
             if recurso == 'Libro':
@@ -118,44 +121,73 @@ class BaseDeDatos(Frame):
                 self.campos.append(tk.Label(frame, text="Seleccione Libro a Eliminar, Esto Eliminará Todas Sus Copias"))
                 self.campos[-1].pack()
                 self.recurso_var = tk.StringVar(frame)
-                lista = tk.OptionMenu(frame, self.recurso_var, "")
+                lista = tk.OptionMenu(frame, self.recurso_var, "Seleccione aquí")
                 lista.pack()
                 self.campos.append(lista)
                 self.campos.append(tk.Button(frame, text = "Eliminar"))
                 self.campos[-1].pack()
-
-                sede = self.sede_var.get()
 
                 if sede == "Medellín":
                     biblioteca = self.sistema.get_bibliotecas()[0]
                 elif sede == "Bogotá":
                     biblioteca = self.sistema.get_bibliotecas()[1]
 
-                # CHECKPOINT - NO ENTRA EN ESTE FOR POR ALGUNA RAZÓN
                 for libro in biblioteca.get_libros():
                     lista["menu"].add_command(label=f"{libro.get_nombre()}", command=tk._setit(self.recurso_var, libro.get_nombre()))
                 
             elif recurso == "Copia":
-                self.campos.append(tk.Label(frame, text="Seleccione Copia a Eliminar"))  # Esto debería ser una lista desplegable con todos los computadores
+                self.campos.append(tk.Label(frame, text="Seleccione la Copia a Eliminar"))
                 self.campos[-1].pack()
-                self.campos.append(tk.Entry(frame))
-                self.campos[-1].pack()
+                self.recurso_var = tk.StringVar(frame)
+                lista = tk.OptionMenu(frame, self.recurso_var, "Seleccione aquí")
+                lista.pack()
+                self.campos.append(lista)
                 self.campos.append(tk.Button(frame, text = "Eliminar"))
                 self.campos[-1].pack()
+
+                if sede == "Medellín":
+                    biblioteca = self.sistema.get_bibliotecas()[0]
+                elif sede == "Bogotá":
+                    biblioteca = self.sistema.get_bibliotecas()[1]
+
+                for copia in biblioteca.get_copias():
+                    lista["menu"].add_command(label=f"{copia.get_nombre()} ID: {copia.get_id()}", command=tk._setit(self.recurso_var, copia.get_nombre()))
+
             elif recurso == "Computador":
-                self.campos.append(tk.Label(frame, text="Seleccione Computador a Eliminar, Esto Eliminará Los PC De Este Modelo"))  # Esto debería ser una lista desplegable con todos los computadores
+                self.campos.append(tk.Label(frame, text="Seleccione Computador a Eliminar, Esto Eliminará Todos Sus PC"))
                 self.campos[-1].pack()
-                self.campos.append(tk.Entry(frame))
-                self.campos[-1].pack()
+                self.recurso_var = tk.StringVar(frame)
+                lista = tk.OptionMenu(frame, self.recurso_var, "Seleccione aquí")
+                lista.pack()
+                self.campos.append(lista)
                 self.campos.append(tk.Button(frame, text = "Eliminar"))
                 self.campos[-1].pack()
+
+                if sede == "Medellín":
+                    biblioteca = self.sistema.get_bibliotecas()[0]
+                elif sede == "Bogotá":
+                    biblioteca = self.sistema.get_bibliotecas()[1]
+
+                for computador in biblioteca.get_computadores():
+                    lista["menu"].add_command(label=f"{computador.get_nombre()}", command=tk._setit(self.recurso_var, computador.get_nombre()))
+
             elif recurso == "PC":
-                self.campos.append(tk.Label(frame, text="Seleccione PC a Eliminar"))  # Esto debería ser una lista desplegable con todos los computadores
+                self.campos.append(tk.Label(frame, text="Seleccione el PC a Eliminar"))
                 self.campos[-1].pack()
-                self.campos.append(tk.Entry(frame))
-                self.campos[-1].pack()
+                self.recurso_var = tk.StringVar(frame)
+                lista = tk.OptionMenu(frame, self.recurso_var, "Seleccione aquí")
+                lista.pack()
+                self.campos.append(lista)
                 self.campos.append(tk.Button(frame, text = "Eliminar"))
                 self.campos[-1].pack()
+
+                if sede == "Medellín":
+                    biblioteca = self.sistema.get_bibliotecas()[0]
+                elif sede == "Bogotá":
+                    biblioteca = self.sistema.get_bibliotecas()[1]
+
+                for PC in biblioteca.get_PCs():
+                    lista["menu"].add_command(label=f"{PC.get_nombre()} ID: {PC.get_id()}", command=tk._setit(self.recurso_var, PC.get_nombre()))
         # tk.Button(frame3, text='Ejecutar', command=self.ejecutar).pack()
     
     def kill(self, frame):
