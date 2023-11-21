@@ -3,17 +3,20 @@ from gestorExcepciones.erroresPython import *
 class Serializador:
     @classmethod
     def serializar(cls, sistema):
-        cls.serializarBibliotecas(sistema,"baseDatos\\temp\\Bibliotecas.pkl")
-        cls.serializarLibros(sistema,"baseDatos\\temp\\Libros.pkl")
-        cls.serializarComputadores(sistema,"baseDatos\\temp\\Computadores.pkl")
-        cls.serializarAutores(sistema,"baseDatos\\temp\\Autores.pkl")
-        cls.serializarUsuario(sistema,"baseDatos\\temp\\Usuario.pkl")
+        cls.serializarBibliotecas(sistema,"src\\baseDatos\\temp\\Bibliotecas.pkl")
+        cls.serializarLibros(sistema,"src\\baseDatos\\temp\\Libros.pkl")
+        cls.serializarComputadores(sistema,"src\\baseDatos\\temp\\Computadores.pkl")
+        cls.serializarAutores(sistema,"src\\baseDatos\\temp\\Autores.pkl")
+        cls.serializarUsuario(sistema,"src\\baseDatos\\temp\\Usuario.pkl")
     
     @classmethod
     def serializarBibliotecas(cls, sistema, ruta):
+        try:
             picklefile = open(ruta, "wb")
             pickle.dump(sistema.get_bibliotecas(), picklefile)
             picklefile.close()
+        except:
+            print(ErrorSerializacion().getError())
         
 
     @classmethod
@@ -49,7 +52,7 @@ class Serializador:
             picklefile = open(ruta, "wb")
             pickle.dump(sistema.get_user(), picklefile)
             picklefile.close()
-        except: 
+        except:
             print(ErrorSerializacion().getError())
 
     
