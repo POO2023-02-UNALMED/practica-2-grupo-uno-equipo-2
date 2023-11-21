@@ -8,6 +8,7 @@ class Computador(Recurso):
         self.marca = marca
         self.gama = gama
         Computador.totalPCs += 1
+        self.idRecurso = Computador.totalPCs
 
     def tipo_recurso(self):
         return "Computador"

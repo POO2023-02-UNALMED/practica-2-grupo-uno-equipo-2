@@ -11,6 +11,7 @@ from gestorExcepciones.erroresDeUsuario import *
 
 class GestionMultas(Frame):
 
+
     def __init__(self, root, sistema):
         super().__init__(root, height=70,width=500,bg="white", borderwidth = 10, highlightthickness=3, highlightbackground="#7c9933")
         self.root = root
@@ -94,3 +95,4 @@ class GestionMultas(Frame):
         messagebox.askokcancel("Multa pagada", "Su multa ha sido pagada con exito.")
         self.kill(self.frame4)
         
+

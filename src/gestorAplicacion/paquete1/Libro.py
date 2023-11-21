@@ -10,6 +10,7 @@ class Libro(Recurso):
         self.año = año
         autor.get_obras().append(self)
         Libro.totalLibros += 1
+        self.idRecurso = Libro.totalLibros
     
     def get_nombre(self):
         return self.nombre

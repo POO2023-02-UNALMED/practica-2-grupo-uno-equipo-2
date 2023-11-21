@@ -2,13 +2,19 @@ from .Libro import Libro
 from .Prestable import Prestable
 
 class Copia(Libro, Prestable):
+    contadorCopia = 0
     def __init__(self, idCopia, libro, ubicacion):
         super().__init__(libro.get_nombre(), 1, libro.get_isbn(), libro.get_autor(), libro.get_año())
-        self.idCopia = idCopia
         self.disponibleEvento = True  # Por defecto, disponible para eventos
         self.disponibleParticular = True  # Por defecto, disponible para préstamos particulares
         self.ubicacion = ubicacion
+        Copia.contadorCopia += 1
+        self.idCopia = Copia.contadorCopia
 
+    @staticmethod
+    def get_contadorCopia():
+        return Copia.contadorCopia
+    
     def get_id(self):
         return self.idCopia
 
