@@ -243,7 +243,7 @@ class BaseDeDatos(Frame):
                 
             elif recurso == "Copia":
                 copiaDe = ""
-                for libro in self.sistema.get_libros():
+                for libro in biblioteca.get_libros():
                     if libro.get_nombre() == valores[0]:
                         copiaDe = libro
                         break
@@ -254,7 +254,7 @@ class BaseDeDatos(Frame):
                 messagebox.showinfo("Éxito","Se ha agregado la Copia a la base de datos con éxito.")
                 self.actualizar_campos(frame)
             elif recurso == "Computador":
-                for computador in self.sistema.get_computadores():
+                for computador in biblioteca.get_computadores():
                     if computador.get_nombre() == valores[0] & computador.get_marca() == valores[1]:
                         messagebox.showerror("Error","Este computador ya se encuentra en la base de datos.")
                         return

@@ -282,7 +282,7 @@ if __name__ == "__main__":
     sistema = Sistema()
     Deserializador.deserializar(sistema)
     #app = Aplicacion(sistema)
-
+    """
     autor1 = Autor("Yuval Noah Harari", "Israel", "Historia")
     autor2 = Autor("J.K. Rowling", "Reino Unido", "Fantasía")
     autor3 = Autor("Harper Lee", "Estados Unidos", "Ficción")
@@ -417,5 +417,5 @@ if __name__ == "__main__":
 
     
     Serializador.serializar(sistema)
-
+    """
     ventanaInicial(sistema)
