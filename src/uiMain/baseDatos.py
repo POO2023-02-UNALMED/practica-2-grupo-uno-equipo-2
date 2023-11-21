@@ -270,7 +270,7 @@ class BaseDeDatos(Frame):
                 if modelo == "":
                     messagebox.showerror("ERROR","Ese modelo de PC no se encuentra en la Biblioteca, añada el Computador primero o intente con otro.")
                     return
-                biblioteca.get_PCs().append(PC(modelo.get_nombre(),True,biblioteca.get_sede()))
+                    biblioteca.get_PCs().append(PC(modelo.get_nombre(),True,biblioteca.get_sede()))
                 messagebox.showinfo("Éxito","Se ha agregado el PC a la base de datos con éxito.")
                 self.actualizar_campos(frame)
         except CampoVacio:

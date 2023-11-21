@@ -169,13 +169,13 @@ class busquedaBasica(Frame):
                 Label(self, text= f"Seleccione la sede en la cual desea realizar el prestamo: ", bg="white", fg="black", font=("Arial", 11)).grid(row=4,column=0, columnspan=2, pady=5)
                 opcionSede = ttk.Combobox(self, values=sedes, foreground="white", state="readonly", font=("Arial", 11))
                 opcionSede.grid(row=5, column=0, columnspan=2) 
-                sedeSeleccionada = None                            
+                sedeSeleccionada = date.today()                            
                 hur = Label(self, text= "Ingrese la fecha hasta la cual desea realizar el prestamo: ", bg="white", fg="black", font=("Arial", 11))
                 hur.grid(row=6,column=0, columnspan=2)
                 cal = Calendar(self, mindate=date.today())
                 cal.grid(row=7,column=0, columnspan=2)
 
-                fechaSeleccionada = None
+                fechaSeleccionada = date.today()    
                 def seleccionarFecha(event):
                     global fechaSeleccionada
                     fechaSeleccionada = cal.get_date()
@@ -212,13 +212,13 @@ class busquedaBasica(Frame):
             Label(self, text= f"Seleccione la sede en la cual desea realizar el prestamo: ", bg="white", fg="black").grid(row=4,column=0, columnspan=2, pady=5)
             opcionSede = ttk.Combobox(self, values=sedes, foreground="white", state="readonly")
             opcionSede.grid(row=5, column=0, columnspan=2) 
-            sedeSeleccionada = None                            
+            sedeSeleccionada = date.today()                            
             hur = Label(self, text= "Ingrese la fecha hasta la cual desea realizar el prestamo: ", bg="white", fg="black")
             hur.grid(row=6,column=0, columnspan=2)
             cal = Calendar(self, mindate=date.today())
             cal.grid(row=7,column=0, columnspan=2)
 
-            self.fechaSeleccionada = None
+            self.fechaSeleccionada = date.today()    
             def seleccionarFecha(event):
                 self.fechaSeleccionada = cal.get_date()
             cal.bind("<<CalendarSelected>>", seleccionarFecha)
@@ -319,13 +319,13 @@ class busquedaPorCriterio(FieldFrame):
                 Label(self, text= f"Seleccione la sede en la cual desea realizar el prestamo: ", bg="white", fg="black", font=("Arial", 11)).grid(row=4,column=0, columnspan=2, pady=5)
                 opcionSede = ttk.Combobox(self, values=sedes, foreground="white", state="readonly")
                 opcionSede.grid(row=5, column=0, columnspan=2) 
-                sedeSeleccionada = None                            
+                sedeSeleccionada = date.today()                            
                 hur = Label(self, text= "Ingrese la fecha hasta la cual desea realizar el prestamo: ", bg="white", fg="black", font=("Arial", 11))
                 hur.grid(row=6,column=0, columnspan=2)
                 cal = Calendar(self, mindate=date.today())
                 cal.grid(row=7,column=0, columnspan=2)
 
-                fechaSeleccionada = None
+                fechaSeleccionada = date.today()    
                 def seleccionarFecha(event):
                     global fechaSeleccionada
                     fechaSeleccionada = cal.get_date()
@@ -339,7 +339,7 @@ class busquedaPorCriterio(FieldFrame):
                     for copia in sedeSel.get_copias():
                         if copia.get_nombre() == recurso.get_nombre():
                             copiaSel = copia 
-                    self.sistema.get_user().get_multas().append(Prestamo(self.sistema.get_user(), copiaSel, "Particular", date.today(), fechaSeleccionada, sedeSel))
+                    self.sistema.get_user().get_prestamos().append(Prestamo(self.sistema.get_user(), copiaSel, "Particular", date.today(), fechaSeleccionada, sedeSel))
                     sedeSel.get_copias().remove(copiaSel)
                     messagebox.askokcancel(title="Reserva realizada", message="¡Su reserva ha sido realizada con exito! No olvide devolver su recurso :)")
                     self.kill(self)
@@ -362,13 +362,13 @@ class busquedaPorCriterio(FieldFrame):
             Label(self, text= f"Seleccione la sede en la cual desea realizar el prestamo: ", bg="white", fg="black", font=("Arial", 11)).grid(row=4,column=0, columnspan=2, pady=5)
             opcionSede = ttk.Combobox(self, values=sedes, foreground="white", state="readonly")
             opcionSede.grid(row=5, column=0, columnspan=2) 
-            sedeSeleccionada = None                            
+            sedeSeleccionada = date.today()                            
             hur = Label(self, text= "Ingrese la fecha hasta la cual desea realizar el prestamo: ", bg="white", fg="black", font=("Arial", 11))
             hur.grid(row=6,column=0, columnspan=2)
             cal = Calendar(self, mindate=date.today())
             cal.grid(row=7,column=0, columnspan=2)
 
-            fechaSeleccionada = None
+            fechaSeleccionada = date.today()    
             def seleccionarFecha(event):
                 global fechaSeleccionada
                 fechaSeleccionada = cal.get_date()
@@ -382,7 +382,7 @@ class busquedaPorCriterio(FieldFrame):
                 for pc in sedeSel.get_PCs():
                     if pc.get_nombre() == recurso.get_nombre():
                         copiaSel = pc 
-                self.sistema.get_user().get_multas().append(Prestamo(self.sistema.get_user(), copiaSel, "Particular", date.today(), fechaSeleccionada, sedeSel))
+                self.sistema.get_user().get_prestamos().append(Prestamo(self.sistema.get_user(), copiaSel, "Particular", date.today(), fechaSeleccionada, sedeSel))
                 sedeSel.get_PCs().remove(copiaSel)
                 messagebox.askokcancel(title="Reserva realizada", message="¡Su reserva ha sido realizada con exito! No olvide devolver su recurso :)")
                 self.kill(self)
@@ -464,13 +464,13 @@ class busquedaPorLista(Frame):
             Label(self, text= f"Seleccione la sede en la cual desea realizar el prestamo: ", bg="white", fg="black", font=("Arial", 11)).grid(row=1,column=0, columnspan=2, pady=5)
             opcionSede = ttk.Combobox(self, values=sedes, foreground="white", state="readonly", font=("Arial", 11))
             opcionSede.grid(row=2, column=0, columnspan=2) 
-            sedeSeleccionada = None                            
+            sedeSeleccionada = date.today()                            
             hur = Label(self, text= "Ingrese la fecha hasta la cual desea realizar el prestamo: ", bg="white", fg="black")
             hur.grid(row=3,column=0, columnspan=2)
             cal = Calendar(self, mindate=date.today())
             cal.grid(row=4,column=0, columnspan=2)
 
-            fechaSeleccionada = None
+            fechaSeleccionada = date.today()    
             def seleccionarFecha(event):
                 global fechaSeleccionada
                 fechaSeleccionada = cal.get_date()
@@ -484,7 +484,7 @@ class busquedaPorLista(Frame):
                 for copia in sedeSel.get_copias():
                     if copia.get_nombre() == self.libroSel.get_nombre():
                         copiaSel = copia 
-                self.sistema.get_user().get_multas().append(Prestamo(self.sistema.get_user(), copiaSel, "Particular", date.today(), fechaSeleccionada, sedeSel))
+                self.sistema.get_user().get_prestamos().append(Prestamo(self.sistema.get_user(), copiaSel, "Particular", date.today(), fechaSeleccionada, sedeSel))
                 sedeSel.get_copias().remove(copiaSel)
                 messagebox.askokcancel(title="Reserva realizada", message="¡Su reserva ha sido realizada con exito! No olvide devolver su recurso :)")
                 self.kill(self)
@@ -525,13 +525,13 @@ class busquedaPorLista(Frame):
             Label(self, text= f"Seleccione la sede en la cual desea realizar el prestamo: ", bg="white", fg="black", font=("Arial", 11)).grid(row=1,column=0, columnspan=2, pady=5)
             opcionSede = ttk.Combobox(self, values=sedes, foreground="white", state="readonly")
             opcionSede.grid(row=2, column=0, columnspan=2) 
-            sedeSeleccionada = None                            
+            sedeSeleccionada = date.today()                            
             hur = Label(self, text= "Ingrese la fecha hasta la cual desea realizar el prestamo: ", bg="white", fg="black", font=("Arial", 11))
             hur.grid(row=3,column=0, columnspan=2)
             cal = Calendar(self, mindate=date.today())
             cal.grid(row=4,column=0, columnspan=2)
 
-            fechaSeleccionada = None
+            fechaSeleccionada = date.today()    
             def seleccionarFecha(event):
                 global fechaSeleccionada
                 fechaSeleccionada = cal.get_date()
@@ -545,7 +545,7 @@ class busquedaPorLista(Frame):
                 for pc in sedeSel.get_PCs():
                     if pc.get_nombre() == self.computadorSel.get_nombre():
                         pcSel = pc
-                self.sistema.get_user().get_multas().append(Prestamo(self.sistema.get_user(), pcSel, "Particular", date.today(), fechaSeleccionada, sedeSel))
+                self.sistema.get_user().get_prestamos().append(Prestamo(self.sistema.get_user(), pcSel, "Particular", date.today(), fechaSeleccionada, sedeSel))
                 sedeSel.get_PCs().remove(pcSel)
                 messagebox.askokcancel(title="Reserva realizada", message="¡Su reserva ha sido realizada con exito! No olvide devolver su recurso :)")
                 self.kill(self)
