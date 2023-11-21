@@ -243,34 +243,34 @@ class BaseDeDatos(Frame):
                 
             elif recurso == "Copia":
                 copiaDe = ""
-                for libro in biblioteca.get_libros():
+                for libro in self.sistema.get_libros():
                     if libro.get_nombre() == valores[0]:
                         copiaDe = libro
                         break
-                if modelo == "":
+                if copiaDe == "":
                     messagebox.showerror("ERROR","Ese Libro no se encuentra en la Biblioteca, añada el Libro primero o intente con otro.")
                     return
                 biblioteca.get_copias().append(Copia(0,copiaDe,biblioteca.get_sede()))
                 messagebox.showinfo("Éxito","Se ha agregado la Copia a la base de datos con éxito.")
                 self.actualizar_campos(frame)
             elif recurso == "Computador":
-                for computador in biblioteca.get_computadores():
+                for computador in self.sistema.get_computadores():
                     if computador.get_nombre() == valores[0] & computador.get_marca() == valores[1]:
                         messagebox.showerror("Error","Este computador ya se encuentra en la base de datos.")
                         return
-                biblioteca.get_computadores().append(Computador(valores[0],0,valores[1],valores[2]))
+                self.sistema.get_computadores().append(Computador(valores[0],0,valores[1],valores[2]))
                 messagebox.showinfo("Éxito","Se ha agregado el Computador a la base de datos con éxito.")
                 self.actualizar_campos(frame)
             elif recurso == "PC":
                 modelo = ""
-                for computador in biblioteca.get_computadores():
+                for computador in self.sistema.get_computadores():
                     if computador.get_nombre() == valores[0]:
                         modelo = computador
                         break
                 if modelo == "":
                     messagebox.showerror("ERROR","Ese modelo de PC no se encuentra en la Biblioteca, añada el Computador primero o intente con otro.")
                     return
-                biblioteca.get_copias().append(PC(modelo.get_nombre(),True,biblioteca.get_sede()))
+                biblioteca.get_PCs().append(PC(modelo.get_nombre(),True,biblioteca.get_sede()))
                 messagebox.showinfo("Éxito","Se ha agregado el PC a la base de datos con éxito.")
                 self.actualizar_campos(frame)
         except CampoVacio:
@@ -334,9 +334,9 @@ class BaseDeDatos(Frame):
                             messagebox.showerror("Error","El PC Se Encuentra Prestado.")
                             return
                 
-                for i in range(len(biblioteca.get_pcs())):
-                    if f"{biblioteca.get_pcs()[i].get_modelo()} ID: {biblioteca.get_pcs()[i].get_id()}" == re_var:
-                        del biblioteca.get_pcs()[i]
+                for i in range(len(biblioteca.get_PCs())):
+                    if f"{biblioteca.get_PCs()[i].get_modelo()} ID: {biblioteca.get_PCs()[i].get_id()}" == re_var:
+                        del biblioteca.get_PCs()[i]
                         messagebox.showinfo("Éxito","Se ha eliminado el PC de la base de datos con éxito.")
                         self.actualizar_campos(frame)
                         return
