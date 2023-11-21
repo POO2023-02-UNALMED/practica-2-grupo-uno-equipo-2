@@ -3,11 +3,11 @@ from gestorExcepciones.erroresPython import *
 class Serializador:
     @classmethod
     def serializar(cls, sistema):
-        cls.serializarBibliotecas(sistema,"src\\baseDatos\\temp\\Bibliotecas.pkl")
-        cls.serializarLibros(sistema,"src\\baseDatos\\temp\\Libros.pkl")
-        cls.serializarComputadores(sistema,"src\\baseDatos\\temp\\Computadores.pkl")
-        cls.serializarAutores(sistema,"src\\baseDatos\\temp\\Autores.pkl")
-        cls.serializarUsuario(sistema,"src\\baseDatos\\temp\\Usuario.pkl")
+        cls.serializarBibliotecas(sistema,"baseDatos\\temp\\Bibliotecas.pkl")
+        cls.serializarLibros(sistema,"baseDatos\\temp\\Libros.pkl")
+        cls.serializarComputadores(sistema,"baseDatos\\temp\\Computadores.pkl")
+        cls.serializarAutores(sistema,"baseDatos\\temp\\Autores.pkl")
+        cls.serializarUsuario(sistema,"baseDatos\\temp\\Usuario.pkl")
     
     @classmethod
     def serializarBibliotecas(cls, sistema, ruta):

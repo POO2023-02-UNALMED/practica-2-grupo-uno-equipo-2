@@ -3,11 +3,11 @@ from gestorExcepciones.erroresPython import *
 class Deserializador:
     @classmethod
     def deserializar(cls, sistema):
-        cls.deserializarBibliotecas(sistema,"src\\baseDatos\\temp\\Bibliotecas.pkl")
-        cls.deserializarLibros(sistema,"src\\baseDatos\\temp\\Libros.pkl")
-        cls.deserializarComputadores(sistema,"src\\baseDatos\\temp\\Computadores.pkl")
-        cls.deserializarAutores(sistema,"src\\baseDatos\\temp\\Autores.pkl")
-        cls.deserializarUsuario(sistema,"src\\baseDatos\\temp\\Usuario.pkl")
+        cls.deserializarBibliotecas(sistema,"baseDatos\\temp\\Bibliotecas.pkl")
+        cls.deserializarLibros(sistema,"baseDatos\\temp\\Libros.pkl")
+        cls.deserializarComputadores(sistema,"baseDatos\\temp\\Computadores.pkl")
+        cls.deserializarAutores(sistema,"baseDatos\\temp\\Autores.pkl")
+        cls.deserializarUsuario(sistema,"baseDatos\\temp\\Usuario.pkl")
 
     @classmethod
     def deserializarBibliotecas(cls, sistema, ruta):
