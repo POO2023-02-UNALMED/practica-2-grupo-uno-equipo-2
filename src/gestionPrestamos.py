@@ -7,6 +7,8 @@ from gestorAplicacion.paquete1.PC import PC
 from datetime import date
 from FieldFrame import FieldFrame
 from tkcalendar import Calendar
+from gestorExcepciones.erroresPython import *
+from gestorExcepciones.erroresDeUsuario import *
 
 class GestionPrestamo(Frame):
 
@@ -44,29 +46,36 @@ class GestionPrestamo(Frame):
 
 
     def mostrarPrestamos(self):
-        self.kill(self.frame4)
-        prestamos = self.sistema.get_user().get_prestamos()
-        lista = ""
-        for i, prestamo in enumerate(prestamos):
-             lista += f"{i}. Prestamo de: {prestamo.get_materialPrestado().get_nombre()} con fecha de vencimiento: {prestamo.get_fecha_fin()} \n"
-        listaPrestamos = Text(self.frame4, border=False, font=("Arial", 11), borderwidth=2, highlightthickness=3, highlightbackground="gray")
-        listaPrestamos.grid(row=0, column=0, columnspan=2, pady=5)
-        listaPrestamos.delete("1.0", "end")
-        listaPrestamos.config(height=5)
-        listaPrestamos.insert(INSERT, lista)
+        try:
+            if not self.sistema.get_user().get_prestamos():
+                raise NoHayPrestamos
+            self.kill(self.frame4)
+            prestamos = self.sistema.get_user().get_prestamos()
+            lista = ""
+            for i, prestamo in enumerate(prestamos):
+                lista += f"{i}. Prestamo de: {prestamo.get_materialPrestado().get_nombre()} con fecha de vencimiento: {prestamo.get_fecha_fin()} \n"
+            listaPrestamos = Text(self.frame4, border=False, font=("Arial", 11), borderwidth=2, highlightthickness=3, highlightbackground="gray")
+            listaPrestamos.grid(row=0, column=0, columnspan=2, pady=5)
+            listaPrestamos.delete("1.0", "end")
+            listaPrestamos.config(height=5)
+            listaPrestamos.insert(INSERT, lista)
 
-        self.seleccion = FieldFrame(self.frame4, "Criterio", ["ID: "], "Valor")
-        self.seleccion.grid(row=1, column =0, columnspan=2, pady=5)
-        self.seleccion.crearBoton("Enviar", self.confirmar, 0)
+            self.seleccion = FieldFrame(self.frame4, "Criterio", ["ID: "], "Valor")
+            self.seleccion.grid(row=1, column =0, columnspan=2, pady=5)
+            self.seleccion.crearBoton("Enviar", self.confirmar, 0)
+        except NoHayPrestamos:
+            messagebox.showerror("Error", NoHayPrestamos().getError())
 
 
     def confirmar(self):
-        if self.seleccion.getValue("ID: ") == "":
-            messagebox.showwarning(title="Error", message="El campo está vacío")
-            return
+        try:
+            if self.seleccion.getValue("ID: ") == "":
+                raise CampoVacio
+        except CampoVacio:
+            return messagebox.showerror("Error", CampoVacio().getError())
         try:
             if int(self.seleccion.getValue("ID: ")) < 0:
-                raise ValueError()
+                raise IndexFuera
             self.prestamo = self.sistema.get_user().get_prestamos()[int(self.seleccion.getValue("ID: "))]
             self.kill(self.frame4)
             Label(self.frame4, text="Detalles del prestamo: ", bg="white", fg="black",font=("Arial", 11)).grid(row=0,column=0, columnspan=2)
@@ -76,8 +85,10 @@ class GestionPrestamo(Frame):
             devolver.grid(row=2, column= 0)
             extender = Button(self.frame4, text="Extender prestamo", command= self.extender)
             extender.grid(row=2, column=1)
-        except (IndexError, ValueError):
-            messagebox.showwarning(title="Error", message="Valor incorrecto. Por favor, seleccione un numero de la lista")
+        except (IndexError, IndexFuera):
+            messagebox.showerror("Error", IndexFuera().getError())
+        except ValueError:
+            messagebox.showerror("Error", DatoIncorrecto("Numero").getError())
 
     def extender(self):
         self.kill(self.frame4)

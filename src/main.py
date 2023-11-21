@@ -5,6 +5,7 @@ from prestamoRecursos import PrestamoRecursos
 from reservaEvento import ReservaEvento
 from baseDatos import BaseDeDatos
 from gestionPrestamos import GestionPrestamo
+from gestionMultas import GestionMultas
 from gestorAplicacion.paquete1.Libro import Libro
 from gestorAplicacion.paquete1.Computador import Computador
 from gestorAplicacion.paquete1.BibliotecaDos import BibliotecaDos
@@ -15,6 +16,7 @@ from gestorAplicacion.paquete1.Sala import Sala
 from gestorAplicacion.paquete2.Sistema import Sistema
 from gestorAplicacion.paquete2.Usuario import Usuario
 from gestorAplicacion.paquete2.Prestamo import Prestamo
+from gestorAplicacion.paquete2.Multa import Multa
 from datetime import date
 
 
@@ -24,8 +26,9 @@ class ventanaInicial(Tk):
     def __init__(self, sistema):
         super().__init__()
         self.title("Inicio")
-        self.geometry("1100x700")
+        self.geometry("1250x800")
         self.configure(background="#b9d279")
+        self.iconbitmap("img\\R.ico")
 
         """
 
@@ -49,28 +52,28 @@ class ventanaInicial(Tk):
         frameP2['borderwidth'] = 5
         frameP2.configure(background="#b9d279")
 
-        frameP3=Frame(frameP1,height=70,width=500,bg="#085870")
+        frameP3=Frame(frameP1,height=70,width=500,bg="#b9d279")
         frameP3.grid(row=0,column=0)
 
         frameP4 = Frame(frameP1, bg = "#b9d279", width=400, height=400)
         frameP4.grid(row = 1, column = 0, pady=45)
 
-        frameP5 = Label(frameP2,height=70,width=500,bg="#7c9933")
+        frameP5 = Frame(frameP2,height=70,width=500,bg="#7c9933")
         frameP5.grid(row=0,column=0) 
 
 
-        frameP6 = Frame(frameP2, width=450, height=450)
+        frameP6 = Frame(frameP2, width=450, height=450, bg ="#7c9933")
         frameP6.grid(row = 1, column = 0, pady=40)
 
 
-        saludo = Label(frameP3,text="Bienvenido al sistema de bibliotecas de la Universidad Nacional de Colombia",font=("arial", 18, "bold"),bg="#7c9933",wraplength=500,fg="#cedae0")
+        saludo = Label(frameP3,text="Bienvenido al sistema de bibliotecas de la Universidad Nacional de Colombia",font=("arial", 17, "bold"),bg="#7c9933",wraplength=500,fg="#cedae0")
         saludo.pack(expand = True)
 
-        imagenes = [PhotoImage(file = "src\\img\\Sis1.png"),
-                    PhotoImage(file = "src\\img\\Sis2.png"),
-                    PhotoImage(file = "src\\img\\Sis3.png"),
-                    PhotoImage(file = "src\\img\\Sis4.png"),
-                    PhotoImage(file = "src\\img\\Sis5.png")]
+        imagenes = [PhotoImage(file = "img\\Sis1.png"),
+                    PhotoImage(file = "img\\Sis2.png"),
+                    PhotoImage(file = "img\\Sis3.png"),
+                    PhotoImage(file = "img\\Sis4.png"),
+                    PhotoImage(file = "img\\Sis5.png")]
 
         #imagen = PhotoImage(file = "loki.png")
         ImagenSistema = Label(frameP4, image= imagenes[0],width=420,height=420,wraplength=160,highlightbackground="#7c9933",highlightthickness=4, bg = "#b9d279")
@@ -104,26 +107,26 @@ class ventanaInicial(Tk):
         presentacion.pack(expand = True)
 
 
-        fotosSamuel = [PhotoImage(file = "src\\img\\devSam1.png"),
-                    PhotoImage(file = "src\\img\\devSam2.png"),
-                    PhotoImage(file = "src\\img\\devSam3.png"),
-                    PhotoImage(file = "src\\img\\devSam4.png")]
+        fotosSamuel = [PhotoImage(file = "img\\devSam1.png"),
+                    PhotoImage(file = "img\\devSam2.png"),
+                    PhotoImage(file = "img\\devSam3.png"),
+                    PhotoImage(file = "img\\devSam4.png")]
 
-        fotosPablo = [PhotoImage(file = "src\\img\\devPab1.png"),
-                    PhotoImage(file = "src\\img\\devPab2.png"),
-                    PhotoImage(file = "src\\img\\devPab3.png"),
-                    PhotoImage(file = "src\\img\\devPab4.png")]
+        fotosPablo = [PhotoImage(file = "img\\devPab1.png"),
+                    PhotoImage(file = "img\\devPab2.png"),
+                    PhotoImage(file = "img\\devPab3.png"),
+                    PhotoImage(file = "img\\devPab4.png")]
 
         self.samuel = True
 
 
-        img1 = Label(frameP6, image = fotosSamuel[0], width=220,height=220,wraplength=500,highlightbackground="#7c9933",highlightthickness=4, bg = "#b9d279")
+        img1 = Label(frameP6, image = fotosSamuel[0], width=220,height=220,wraplength=500,highlightbackground="#7c9933",highlightthickness=2, bg = "#b9d279")
         img1.grid(column=0,row=0)
-        img2 = Label(frameP6, image = fotosSamuel[1], width=220,height=220,wraplength=500,highlightbackground="#7c9933",highlightthickness=4, bg = "#b9d279")
+        img2 = Label(frameP6, image = fotosSamuel[1], width=220,height=220,wraplength=500,highlightbackground="#7c9933",highlightthickness=2, bg = "#b9d279")
         img2.grid(column=1,row=0)
-        img3 = Label(frameP6, image = fotosSamuel[2], width=220,height=220,wraplength=500,highlightbackground="#7c9933",highlightthickness=4, bg = "#b9d279")
+        img3 = Label(frameP6, image = fotosSamuel[2], width=220,height=220,wraplength=500,highlightbackground="#7c9933",highlightthickness=2, bg = "#b9d279")
         img3.grid(column=0,row=1)
-        img4 = Label(frameP6, image = fotosSamuel[3], width=220,height=220,wraplength=500,highlightbackground="#7c9933",highlightthickness=4, bg = "#b9d279")
+        img4 = Label(frameP6, image = fotosSamuel[3], width=220,height=220,wraplength=500,highlightbackground="#7c9933",highlightthickness=2, bg = "#b9d279")
         img4.grid(column=1,row=1)
 
 
@@ -172,8 +175,9 @@ class ventPrincipal(Tk):
       def __init__(self,sistema):
             super().__init__()
             self.title("Sistema de Gestión de Bibliotecas")
-            self.geometry("1100x700")
+            self.geometry("1250x800")
             self.configure(background="#b9d279")
+            self.iconbitmap("img\\R.ico")
 
             def Volver():
                 self.destroy()
@@ -208,6 +212,12 @@ class ventPrincipal(Tk):
                 p.grid(row=0, column=0,rowspan=2)
                 p.place(relx=0.5,rely=0.5,anchor="center")
 
+            def gestionarMultas():
+                kill(self)
+                p = GestionMultas(self, sistema)
+                p.grid(row=0, column=0, rowspan=2)
+                p.place(relx=0.5,rely=0.5,anchor="center")
+
             def Funny():
                 respuesta = False
                 while(respuesta != True):
@@ -219,30 +229,15 @@ class ventPrincipal(Tk):
             frame = Frame(self, bg="#b9d279")
             frame.pack(padx=10,pady=10)
 
-            bienvenida = Label(frame, text="¡Bienvenido al sistema de bibliotecas de la Universidad Nacional de Colombia!", bg= "#7c9933", fg= "white", font=("arial", 16, "bold"))
+            bienvenida = Label(frame, text="¡Bienvenido al sistema de bibliotecas de la Universidad Nacional de Colombia!", bg= "#8cac39", fg= "white", font=("arial", 15, "bold"))
             bienvenida.pack(anchor="center")
-            img = PhotoImage(file="src\\img\\logo.png")
+            img = PhotoImage(file="img\\logo.png")
             contenedorImg = Label(frame, image = img, bg = "#b9d279")
-            contenedorImg.pack(anchor="center", pady=(40,1))
-            texto = """
-                    El sistema de bibliotecas de la universidad ofrece las siguientes cinco funcionalidades:
-                    1. Reserva de Recurso: Esta función permite a los usuarios reservar recursos disponibles
-                    en la biblioteca, como libros, revistas y documentos electrónicos.
-                    2. Reserva para Evento: Los usuarios pueden reservar espacios dentro de la biblioteca para
-                    eventos como reuniones de estudio, presentaciones y conferencias.
-                    3. Gestión de Base de Datos: Esta funcionalidad permite a los administradores de la 
-                    biblioteca gestionar la base de datos de la biblioteca, incluyendo la adición, eliminación
-                    y modificación de registros de recursos.
-                    4. Gestión de Préstamos: Esta función permite a los usuarios solicitar préstamos de recursos 
-                    de la biblioteca y a los administradores gestionar estos préstamos, incluyendo la emisión, 
-                    renovación y devolución de recursos.
-                    5. Gestión de Multas: Esta funcionalidad permite a los administradores de la biblioteca emitir
-                    y gestionar multas por retrasos en la devolución de recursos prestados. Estas funcionalidades 
-                    hacen que el sistema de bibliotecas de la universidad sea eficiente y fácil de usar para todos los usuarios.
-                    """
+            contenedorImg.pack(anchor="center", pady=(27,20))
+            texto = "El sistema de bibliotecas de la universidad ofrece las siguientes cinco funcionalidades: \n1. Reserva de Recurso: Esta función permite a los usuarios reservar recursos disponibles \nen la biblioteca, como libros, revistas y documentos electrónicos. \n\n2. Reserva para Evento: Los usuarios pueden reservar espacios dentro de la biblioteca para \neventos como reuniones de estudio, presentaciones y conferencias. \n\n3. Gestión de Base de Datos: Esta funcionalidad permite a los administradores de la \nbiblioteca gestionar la base de datos de la biblioteca, incluyendo la adición, eliminación \ny modificación de registros de recursos. \n\n4. Gestión de Préstamos: Esta función permite a los usuarios solicitar préstamos de recursos \nde la biblioteca y a los administradores gestionar estos préstamos, incluyendo la emisión, \nrenovación y devolución de recursos. \n\n5. Gestión de Multas: Esta funcionalidad permite a los administradores de la biblioteca emitir \ny gestionar multas por retrasos en la devolución de recursos prestados. Estas funcionalidades \nhacen que el sistema de bibliotecas de la universidad sea eficiente y fácil de usar para todos \nlos usuarios."
 
-            descripcion = Label(frame, text=texto, bg="#7c9933", fg = "white", font=("arial", 12, "bold"), justify="left", anchor="se",pady=.1)
-            descripcion.pack(padx=25,pady=10, expand=True)
+            descripcion = Label(frame, text=texto, bg="#8cac39", fg = "white", font=("arial", 11, "bold"),justify="left", padx= 20, pady=20)
+            descripcion.pack(padx=25,pady=10, expand=False)
 
 
 
@@ -261,7 +256,7 @@ class ventPrincipal(Tk):
             menu3.add_command(label="Reserva de Recursos para Eventos",command= ReservaDeEvento)
             menu3.add_command(label="Gestión Base de Datos",command= BaseDatos)
             menu3.add_command(label="Gestión de Prestamos y Reservas",command= gestionPrestamos)
-            menu3.add_command(label="Gestión de Multas",command=lambda: print(":)"))
+            menu3.add_command(label="Gestión de Multas",command=gestionarMultas)
 
 
 
@@ -294,18 +289,18 @@ if __name__ == "__main__":
     libros = [
         Libro("Sapiens: De animales a dioses", 1, "978-0-307-58973-2", autor1, 2014),
         Libro("Harry Potter y la piedra filosofal", 2, "978-0-7475-3269-6", autor2, 1997),
-        Libro("Cien años de soledad", 1, "978-84-204-3471-6", autor11, 1967),
-        Libro("1984", 2, "978-3-16-148410-0", autor12, 1949),
-        Libro("Matar a un ruiseñor", 3, "978-0-553-21311-6", autor3, 1960),
-        Libro("Ensayo sobre la ceguera", 4, "978-1-84749-593-7", autor4, 1995),
-        Libro("Los hombres me explican cosas", 5, "978-1-933633-92-9", autor5, 2014),
-        Libro("Don Quijote de la Mancha", 6, "978-84-204-9184-8", autor6, 1605),
-        Libro("El juego de ender", 7, "978-0-06-112008-4", autor7, 1985),
-        Libro("Crónica de una muerte anunciada", 8, "978-84-339-7049-4", autor11, 1981),
-        Libro("Rayuela", 9, "978-84-3760494-7", autor8, 1963),
-        Libro("El gran Gatsby", 10, "978-0-8129-7449-8", autor9, 1925),
-        Libro("El amor en los tiempos del cólera", 12, "978-84-204-5298-7", autor11, 1985),
-        Libro("To Kill a Mockingbird", 13, "978-0-525-43396-9", autor3, 1960),
+        Libro("Cien años de soledad", 3, "978-84-204-3471-6", autor11, 1967),
+        Libro("1984", 4, "978-3-16-148410-0", autor12, 1949),
+        Libro("Matar a un ruiseñor", 5, "978-0-553-21311-6", autor3, 1960),
+        Libro("Ensayo sobre la ceguera", 6, "978-1-84749-593-7", autor4, 1995),
+        Libro("Los hombres me explican cosas", 7, "978-1-933633-92-9", autor5, 2014),
+        Libro("Don Quijote de la Mancha", 8, "978-84-204-9184-8", autor6, 1605),
+        Libro("El juego de ender", 9, "978-0-06-112008-4", autor7, 1985),
+        Libro("Crónica de una muerte anunciada", 10, "978-84-339-7049-4", autor11, 1981),
+        Libro("Rayuela", 11, "978-84-3760494-7", autor8, 1963),
+        Libro("El gran Gatsby", 12, "978-0-8129-7449-8", autor9, 1925),
+        Libro("El amor en los tiempos del cólera", 13, "978-84-204-5298-7", autor11, 1985),
+        Libro("To Kill a Mockingbird", 14, "978-0-525-43396-9", autor3, 1960),
     ]
 
     computadores = [
@@ -385,6 +380,9 @@ if __name__ == "__main__":
     user = Usuario()
     user.get_prestamos().append(Prestamo(user, Copia(12, libros[2], bibliotecas[1]), "Particular", date.today(), date(2023, 12, 31), bibliotecas[1]))
     user.get_prestamos().append(Prestamo(user, PC(computadores[2], True, bibliotecas[1]), "Particular", date.today(), date(2023, 12, 31), bibliotecas[0]))
+
+    user.get_multas().append(Multa("Retraso", date.today(), user, 3000))
+    user.get_multas().append(Multa("Uso indebido", date.today(), user, 10000))
 
     sistema.set_autores(autores)
     sistema.set_bibliotecas(bibliotecas)

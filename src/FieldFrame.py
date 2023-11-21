@@ -18,14 +18,14 @@ class FieldFrame(Frame):
 
 
 
-        self.criteriosLabel = Label(self, text= self.tituloCriterios, bg="white")
+        self.criteriosLabel = Label(self, text= self.tituloCriterios, bg="white", font= ("Arial", 11))
         self.criteriosLabel.grid(row=0, column=0, padx= 50, pady= 10)
 
-        self.valoresLabel = Label(self, text = self.tituloValores, bg="white")
+        self.valoresLabel = Label(self, text = self.tituloValores, bg="white", font= ("Arial", 11))
         self.valoresLabel.grid(row=0, column=1, padx= 50, pady= 10)
 
         for i in range(len(self.criterios)):
-            Label(self, text=self.criterios[i], bg="white").grid(row=(i+1), column = 0)
+            Label(self, text=self.criterios[i], bg="white", font= ("Arial", 11)).grid(row=(i+1), column = 0)
             valor = Entry(self, width=60)
             valor.grid(row=(i+1), column=1, padx= 50, pady= 10)
             if self.valores:
@@ -39,7 +39,7 @@ class FieldFrame(Frame):
         
 
     def crearBoton(self, texto, comando, col):
-        Button(self, text=texto, command= comando).grid(row=(len(self.criterios)+1), column= col, padx= 50, pady= 10)
+        Button(self, text=texto, command= comando, font= ("Arial", 11)).grid(row=(len(self.criterios)+1), column= col, padx= 50, pady= 10)
     
     def limpiarEntradas(self):
         for entrada in self.entradas:
