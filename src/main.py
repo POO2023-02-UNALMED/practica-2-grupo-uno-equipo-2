@@ -283,7 +283,7 @@ if __name__ == "__main__":
     Deserializador.deserializar(sistema)
     #app = Aplicacion(sistema)
 
-    """autor1 = Autor("Yuval Noah Harari", "Israel", "Historia")
+    autor1 = Autor("Yuval Noah Harari", "Israel", "Historia")
     autor2 = Autor("J.K. Rowling", "Reino Unido", "Fantasía")
     autor3 = Autor("Harper Lee", "Estados Unidos", "Ficción")
     autor4 = Autor("José Saramago", "Portugal", "Realismo mágico")
@@ -328,6 +328,19 @@ if __name__ == "__main__":
         BibliotecaDos("Efe Gomez", "Medellín"),
         BibliotecaDos("Gabriel Garcia Marquez", "Bogota")
     ]
+
+    librosSedeMedellin = [libros[0],libros[1],libros[2],libros[3],libros[4],libros[7],libros[10],libros[13]]
+    bibliotecas[0].set_libros(librosSedeMedellin)
+
+    librosSedeBogota = [libros[0],libros[1],libros[2],libros[5],libros[6],libros[7],libros[10],libros[11], libros[12], libros[13]]
+    bibliotecas[1].set_libros(librosSedeBogota)
+
+    computadoresSedeMedellin = [computadores[0], computadores[1], computadores[2], computadores[3]]
+    bibliotecas[0].set_computadores(computadoresSedeMedellin)
+
+    computadoresSedeBogota = [computadores[0], computadores[1], computadores[2], computadores[3], computadores[5]]
+    bibliotecas[1].set_computadores(computadoresSedeBogota)
+
 
     bibliotecas[0].añadir_sala(Sala(bibliotecas[0], "Auditorio 1", 30))
     bibliotecas[0].añadir_sala(Sala(bibliotecas[0], "Auditorio 2", 50))
@@ -403,6 +416,6 @@ if __name__ == "__main__":
     sistema.set_user(user)
 
     
-    Serializador.serializar(sistema)"""
+    Serializador.serializar(sistema)
 
     ventanaInicial(sistema)
