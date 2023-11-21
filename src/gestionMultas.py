@@ -1,0 +1,104 @@
+from tkinter import *
+from tkinter import ttk
+from tkinter import messagebox
+from gestorAplicacion.paquete2.Prestamo import Prestamo
+from gestorAplicacion.paquete1.Copia import Copia
+from gestorAplicacion.paquete1.PC import PC
+from datetime import date
+from FieldFrame import FieldFrame
+from tkcalendar import Calendar
+
+class GestionPrestamo(Frame):
+
+    def __init__(self, root, sistema):
+        super().__init__(root, height=70,width=500,bg="white", borderwidth = 10, highlightthickness=3, highlightbackground="#7c9933")
+        self.root = root
+        self.sistema = sistema
+        self.nombreSedes = [biblioteca.get_nombre() for biblioteca in sistema.get_bibliotecas()]
+
+
+        frame1 = Frame(self, bg="#7c9933")
+        frame1.grid(row=0, column=0)
+        titulo = Label(frame1, text="Gestion de Multas", fg="black", bg="white", font=("Arial", 11))
+        titulo.pack()
+
+
+        frame2 = Frame(self)
+        frame2.grid(row=1,column=0)
+        descripcion = """En esta opcion podras gestionar todo lo relacionado con tus multas, como conocer
+        el motivo de las mismas y cancelar las deudas que éstas te hayan generado"""
+        
+        Label(frame2, text=descripcion, bg="white", fg="black",font=("Arial", 11)).grid(row=0,column=0)
+
+        self.frame3 = Frame(self, bg="white")
+        self.frame3.grid(row=2,column=0)
+        self.gestionar = Button(self.frame3, text="Gestionar multas", command=lambda: self.mostrarMultas(), font=("Arial", 11))
+        self.gestionar.grid(row=0,column=0, padx=50, pady=15)
+        self.frame4 = Frame(self, bg="white")
+        self.frame4.grid(row=3, column=0)
+
+    def kill(self, frame):
+        if frame.winfo_children():
+            for widget in frame.winfo_children():
+                    widget.destroy()
+
+
+    def mostrarMultas(self):
+        self.kill(self.frame4)
+        multas = self.sistema.get_user().get_multas()
+        lista = ""
+        for i, multa in enumerate(multas):
+            lista += f"{i}. Multa por: {multa.get_tipo()} generada el {multa.get_fecha_impuesta()} \n"
+        listaPrestamos = Text(self.frame4, border=False, font=("Arial", 11), borderwidth=2, highlightthickness=3, highlightbackground="gray")
+        listaPrestamos.grid(row=0, column=0, columnspan=2, pady=5)
+        listaPrestamos.delete("1.0", "end")
+        listaPrestamos.config(height=5, state="disabled")
+        listaPrestamos.insert(INSERT, lista)
+
+        self.seleccion = FieldFrame(self.frame4, "Criterio", ["ID: "], "Valor")
+        self.seleccion.grid(row=1, column =0, columnspan=2, pady=5)
+        self.seleccion.crearBoton("Pagar", self.confirmar, 0)
+
+
+    # Copié el código de la Funcionalidad 4 y de acá para abajo no he modificado nada
+    def confirmar(self):
+        if self.seleccion.getValue("ID: ") == "":
+            messagebox.showwarning(title="Error", message="El campo está vacío")
+            return
+        try:
+            if int(self.seleccion.getValue("ID: ")) < 0:
+                raise ValueError()
+            self.prestamo = self.sistema.get_user().get_prestamos()[int(self.seleccion.getValue("ID: "))]
+            self.kill(self.frame4)
+            Label(self.frame4, text="Detalles del prestamo: ", bg="white", fg="black",font=("Arial", 11)).grid(row=0,column=0, columnspan=2)
+            fieldframe = FieldFrame(self.frame4, "Detalle", ["Material prestado: ", "Tipo: ", "Fecha de inicio: ", "Fecha de vencimiento: ", "Sede del prestamo: "], "", [self.prestamo.get_materialPrestado().get_nombre(), self.prestamo.get_tipo(), self.prestamo.get_fecha_inicio(), self.prestamo.get_fecha_fin(), self.prestamo.get_sede().get_sede()], False)
+            fieldframe.grid(row=1, column=0, columnspan=2)
+            devolver = Button(self.frame4, text="Devolver prestamo", command= self.devolver)
+            devolver.grid(row=2, column= 0)
+            extender = Button(self.frame4, text="Extender prestamo", command= self.extender)
+            extender.grid(row=2, column=1)
+        except (IndexError, ValueError):
+            messagebox.showwarning(title="Error", message="Valor incorrecto. Por favor, seleccione un numero de la lista")
+
+    def extender(self):
+        self.kill(self.frame4)
+        Label(self.frame4, text= "Escoge la fecha hasta la cual deseas extender tu prestamo: ", bg="white", fg="black",font=("Arial", 11)).grid(row=0,column=0, columnspan=2, pady=5)
+        self.cal = Calendar(self.frame4, mindate= self.prestamo.get_fecha_fin())
+        self.cal.grid(row=1, column = 0, columnspan = 2, pady=5)
+        self.cal.bind("<<CalendarSelected>>", self.seleccionarFecha)
+
+    def seleccionarFecha(self, event):
+        fechaSeleccionada = self.cal.get_date()
+        self.prestamo.set_fecha_fin(fechaSeleccionada)
+        messagebox.askokcancel(title="Prestamo extendido", message="¡Su prestamo ha sido extendido con exito!, No olvide devolver su recurso :)")
+        self.kill(self.frame4)
+
+    def devolver(self):
+        if isinstance(self.prestamo.get_materialPrestado, Copia):
+            self.prestamo.get_sede().get_copias().append(self.prestamo.get_materialPrestado)
+            self.sistema.get_user().get_prestamos().remove(self.prestamo)
+        else:
+            self.prestamo.get_sede().get_PCs().append(self.prestamo.get_materialPrestado)
+            self.sistema.get_user().get_prestamos().remove(self.prestamo)
+        messagebox.askokcancel(title="Prestamo devuelto", message="¡Su prestamo ha sido devuelto con exito!, Gracias por su puntualidad :)")
+        self.kill(self.frame4)
