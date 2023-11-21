@@ -30,7 +30,7 @@ class ventanaInicial(Tk):
         self.title("Inicio")
         self.geometry("1250x800")
         self.configure(background="#b9d279")
-        self.iconbitmap("img\\R.ico")
+        self.iconbitmap("src\\img\\R.ico")
         self.resizable(False, False)
 
         self.sistema = sistema
@@ -74,11 +74,11 @@ class ventanaInicial(Tk):
         saludo = Label(frameP3,text="Bienvenido al sistema de bibliotecas de la Universidad Nacional de Colombia",font=("arial", 17, "bold"),bg="#7c9933",wraplength=500,fg="#cedae0")
         saludo.pack(expand = True)
 
-        imagenes = [PhotoImage(file = "img\\Sis1.png"),
-                    PhotoImage(file = "img\\Sis2.png"),
-                    PhotoImage(file = "img\\Sis3.png"),
-                    PhotoImage(file = "img\\Sis4.png"),
-                    PhotoImage(file = "img\\Sis5.png")]
+        imagenes = [PhotoImage(file = "src\\img\\Sis1.png"),
+                    PhotoImage(file = "src\\img\\Sis2.png"),
+                    PhotoImage(file = "src\\img\\Sis3.png"),
+                    PhotoImage(file = "src\\img\\Sis4.png"),
+                    PhotoImage(file = "src\\img\\Sis5.png")]
 
         #imagen = PhotoImage(file = "loki.png")
         ImagenSistema = Label(frameP4, image= imagenes[0],width=420,height=420,wraplength=160,highlightbackground="#7c9933",highlightthickness=4, bg = "#b9d279")
@@ -112,15 +112,15 @@ class ventanaInicial(Tk):
         presentacion.pack(expand = True)
 
 
-        fotosSamuel = [PhotoImage(file = "img\\devSam1.png"),
-                    PhotoImage(file = "img\\devSam2.png"),
-                    PhotoImage(file = "img\\devSam3.png"),
-                    PhotoImage(file = "img\\devSam4.png")]
+        fotosSamuel = [PhotoImage(file = "src\\img\\devSam1.png"),
+                    PhotoImage(file = "src\\img\\devSam2.png"),
+                    PhotoImage(file = "src\\img\\devSam3.png"),
+                    PhotoImage(file = "src\\img\\devSam4.png")]
 
-        fotosPablo = [PhotoImage(file = "img\\devPab1.png"),
-                    PhotoImage(file = "img\\devPab2.png"),
-                    PhotoImage(file = "img\\devPab3.png"),
-                    PhotoImage(file = "img\\devPab4.png")]
+        fotosPablo = [PhotoImage(file = "src\\img\\devPab1.png"),
+                    PhotoImage(file = "src\\img\\devPab2.png"),
+                    PhotoImage(file = "src\\img\\devPab3.png"),
+                    PhotoImage(file = "src\\img\\devPab4.png")]
 
         self.samuel = True
 
@@ -188,7 +188,7 @@ class ventPrincipal(Tk):
             self.title("Sistema de Gestión de Bibliotecas")
             self.geometry("1250x800")
             self.configure(background="#b9d279")
-            self.iconbitmap("img\\R.ico")
+            self.iconbitmap("src\\img\\R.ico")
 
             def Volver():
                 self.destroy()
@@ -242,7 +242,7 @@ class ventPrincipal(Tk):
 
             bienvenida = Label(frame, text="¡Bienvenido al sistema de bibliotecas de la Universidad Nacional de Colombia!", bg= "#8cac39", fg= "white", font=("arial", 15, "bold"))
             bienvenida.pack(anchor="center")
-            img = PhotoImage(file="img\\logo.png")
+            img = PhotoImage(file="src\\img\\logo.png")
             contenedorImg = Label(frame, image = img, bg = "#b9d279")
             contenedorImg.pack(anchor="center", pady=(27,20))
             texto = "El sistema de bibliotecas de la universidad ofrece las siguientes cinco funcionalidades: \n1. Reserva de Recurso: Esta función permite a los usuarios reservar recursos disponibles \nen la biblioteca, como libros, revistas y documentos electrónicos. \n\n2. Reserva para Evento: Los usuarios pueden reservar espacios dentro de la biblioteca para \neventos como reuniones de estudio, presentaciones y conferencias. \n\n3. Gestión de Base de Datos: Esta funcionalidad permite a los administradores de la \nbiblioteca gestionar la base de datos de la biblioteca, incluyendo la adición, eliminación \ny modificación de registros de recursos. \n\n4. Gestión de Préstamos: Esta función permite a los usuarios solicitar préstamos de recursos \nde la biblioteca y a los administradores gestionar estos préstamos, incluyendo la emisión, \nrenovación y devolución de recursos. \n\n5. Gestión de Multas: Esta funcionalidad permite a los administradores de la biblioteca emitir \ny gestionar multas por retrasos en la devolución de recursos prestados. Estas funcionalidades \nhacen que el sistema de bibliotecas de la universidad sea eficiente y fácil de usar para todos \nlos usuarios."
