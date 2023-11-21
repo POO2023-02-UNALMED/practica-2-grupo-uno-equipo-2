@@ -255,10 +255,10 @@ class BaseDeDatos(Frame):
                 self.actualizar_campos(frame)
             elif recurso == "Computador":
                 for computador in biblioteca.get_computadores():
-                    if computador.get_nombre() == valores[0] & computador.get_marca() == valores[1]:
+                    if computador.get_nombre() == valores[0] and computador.get_marca() ==  valores[1]:
                         messagebox.showerror("Error","Este computador ya se encuentra en la base de datos.")
                         return
-                self.sistema.get_computadores().append(Computador(valores[0],0,valores[1],valores[2]))
+                biblioteca.get_computadores().append(Computador(valores[0],0,valores[1],valores[2]))
                 messagebox.showinfo("Éxito","Se ha agregado el Computador a la base de datos con éxito.")
                 self.actualizar_campos(frame)
             elif recurso == "PC":
@@ -322,7 +322,7 @@ class BaseDeDatos(Frame):
                             return
                 
                 for i in range(len(biblioteca.get_computadores())):
-                    if biblioteca.get_computadores()[i].get_modelo() == re_var:
+                    if biblioteca.get_computadores()[i].get_nombre() == re_var:
                         del biblioteca.get_computadores()[i]
                         messagebox.showinfo("Éxito","Se ha eliminado el computador de la base de datos con éxito.")
                         self.actualizar_campos(frame)

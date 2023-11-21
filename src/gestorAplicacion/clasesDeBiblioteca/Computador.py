@@ -13,6 +13,9 @@ class Computador(Recurso):
     def tipo_recurso(self):
         return "Computador"
 
+    def get_nombre(self):
+        return super().get_nombre()
+    
     def __str__(self):
         return self.get_nombre()
 
