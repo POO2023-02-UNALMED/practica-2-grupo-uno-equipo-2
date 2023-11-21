@@ -1,14 +1,14 @@
 import tkinter as tk
 from tkinter import Frame, Label, messagebox
-from FieldFrame import FieldFrame
-from gestorAplicacion.paquete1.Autor import Autor
-from gestorAplicacion.paquete2.Sistema import *
-from gestorAplicacion.paquete1.Biblioteca import *
-from gestorAplicacion.paquete1.Recurso import *
-from gestorAplicacion.paquete1.Libro import *
-from gestorAplicacion.paquete1.Computador import *
-from gestorAplicacion.paquete1.Copia import *
-from gestorAplicacion.paquete1.PC import *
+from uiMain.FieldFrame import FieldFrame
+from gestorAplicacion.clasesDeBiblioteca.Autor import Autor
+from gestorAplicacion.clasesDeAdministracion.Sistema import *
+from gestorAplicacion.clasesDeBiblioteca.Biblioteca import *
+from gestorAplicacion.clasesDeBiblioteca.Recurso import *
+from gestorAplicacion.clasesDeBiblioteca.Libro import *
+from gestorAplicacion.clasesDeBiblioteca.Computador import *
+from gestorAplicacion.clasesDeBiblioteca.Copia import *
+from gestorAplicacion.clasesDeBiblioteca.PC import *
 
 class BaseDeDatos(Frame):
 
@@ -30,10 +30,7 @@ class BaseDeDatos(Frame):
 
         frame2 = Frame(self)
         frame2.grid(row=1,column=0)
-        descripcion = """
-                    En este apartado podrás realizar cambios en la Base de Datos
-                    de la biblioteca, añadiendo o eliminando recursos.
-                    """
+        descripcion = "En este apartado podrás realizar cambios en la Base de Datos \nde la biblioteca, añadiendo o eliminando recursos."
         
         Label(frame2, text=descripcion, bg="white", fg="black").grid(row=0,column=0)
 
@@ -80,8 +77,8 @@ class BaseDeDatos(Frame):
                 frameInputs = Agregar(frame, "Criterios", ["Nombre", "ISBN", "Autor", "Año"], "Valor", self.sistema, "Libro")
                 self.campos.append(frameInputs)
                 self.campos[-1].pack()
-                self.campos.append(tk.Button(frame, command= lambda: self.agregar(frameInputs,biblioteca,frame),text="Aceptar"))
-                self.campos[-1].pack()
+                frameInputs.añadirBoton(tk.Button(frameInputs, command= lambda: self.agregar(frameInputs,biblioteca,frame),text="Aceptar", font=("Arial", 11)), 0)
+        
 
             elif recurso == 'Copia':
                 # Crea y empaqueta los campos de entrada para agregar una copia
@@ -93,8 +90,8 @@ class BaseDeDatos(Frame):
                 frameInputs = Agregar(frame, "Criterios", ["Libro"], "Valor", self.sistema, "Copia")
                 self.campos.append(frameInputs)
                 self.campos[-1].pack()
-                self.campos.append(tk.Button(frame, command= lambda: self.agregar(frameInputs,biblioteca,frame),text="Aceptar"))
-                self.campos[-1].pack()
+                frameInputs.añadirBoton(tk.Button(frameInputs, command= lambda: self.agregar(frameInputs,biblioteca,frame),text="Aceptar"), 0)
+                
 
             elif recurso == 'Computador':
                 # Crea y empaqueta los campos de entrada para agregar un computador
@@ -106,8 +103,8 @@ class BaseDeDatos(Frame):
                 frameInputs = Agregar(frame, "Criterios", ["Nombre", "Marca", "Gama"], "Valor", self.sistema, "Computador")
                 self.campos.append(frameInputs)
                 self.campos[-1].pack()
-                self.campos.append(tk.Button(frame, command= lambda: self.agregar(frameInputs,biblioteca,frame),text="Aceptar"))
-                self.campos[-1].pack()
+                frameInputs.añadirBoton(tk.Button(frameInputs, command= lambda: self.agregar(frameInputs,biblioteca,frame),text="Aceptar"), 0)
+             
 
             elif recurso == 'PC':
                 # Crea y empaqueta los campos de entrada para agregar un PC
@@ -119,8 +116,8 @@ class BaseDeDatos(Frame):
                 frameInputs = Agregar(frame, "Criterios", ["Modelo"], "Valor", self.sistema, "PC")
                 self.campos.append(frameInputs)
                 self.campos[-1].pack()
-                self.campos.append(tk.Button(frame, command= lambda: self.agregar(frameInputs,biblioteca,frame),text="Aceptar"))
-                self.campos[-1].pack()
+                frameInputs.añadirBoton(tk.Button(frameInputs, command= lambda: self.agregar(frameInputs,biblioteca,frame),text="Aceptar"), 0)
+
 
         
         elif accion == "Eliminar":

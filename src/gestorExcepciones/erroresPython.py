@@ -11,3 +11,16 @@ class IndexFuera(ErrorAplicacion):
 class DatoIncorrecto(ErrorAplicacion):
     def __init__(self, valor):
         super().__init__(f"Por favor, ingrese un dato de tipo: {valor}")
+
+class VariableNone(ErrorAplicacion):
+    def __init__(self, valor):
+        super().__init__(f"'{valor}' no está asociada a ningún valor")
+
+class RutaIncorrecta(ErrorAplicacion):
+    def __init__(self, valor):
+        super().__init__(f"No se ha podido encontrar la ruta {valor}")
+
+class ErrorSerializacion(ErrorAplicacion):
+    def __init__(self):
+        super().__init__(f"Ha ocurrido un error con la serialización")
+    

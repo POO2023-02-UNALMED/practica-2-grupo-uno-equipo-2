@@ -1,23 +1,25 @@
 from tkinter import *
 from tkinter import messagebox
 #from baseDatos import Aplicacion
-from prestamoRecursos import PrestamoRecursos
-from reservaEvento import ReservaEvento
-from baseDatos import BaseDeDatos
-from gestionPrestamos import GestionPrestamo
-from gestionMultas import GestionMultas
-from gestorAplicacion.paquete1.Libro import Libro
-from gestorAplicacion.paquete1.Computador import Computador
-from gestorAplicacion.paquete1.BibliotecaDos import BibliotecaDos
-from gestorAplicacion.paquete1.Copia import Copia
-from gestorAplicacion.paquete1.PC import PC
-from gestorAplicacion.paquete1.Autor import Autor
-from gestorAplicacion.paquete1.Sala import Sala
-from gestorAplicacion.paquete2.Sistema import Sistema
-from gestorAplicacion.paquete2.Usuario import Usuario
-from gestorAplicacion.paquete2.Prestamo import Prestamo
-from gestorAplicacion.paquete2.Multa import Multa
+from uiMain.prestamoRecursos import PrestamoRecursos
+from uiMain.reservaEvento import ReservaEvento
+from uiMain.baseDatos import BaseDeDatos
+from uiMain.gestionPrestamos import GestionPrestamo
+from uiMain.gestionMultas import GestionMultas
+from gestorAplicacion.clasesDeBiblioteca.Libro import Libro
+from gestorAplicacion.clasesDeBiblioteca.Computador import Computador
+from gestorAplicacion.clasesDeBiblioteca.BibliotecaDos import BibliotecaDos
+from gestorAplicacion.clasesDeBiblioteca.Copia import Copia
+from gestorAplicacion.clasesDeBiblioteca.PC import PC
+from gestorAplicacion.clasesDeBiblioteca.Autor import Autor
+from gestorAplicacion.clasesDeBiblioteca.Sala import Sala
+from gestorAplicacion.clasesDeAdministracion.Sistema import Sistema
+from gestorAplicacion.clasesDeAdministracion.Usuario import Usuario
+from gestorAplicacion.clasesDeAdministracion.Prestamo import Prestamo
+from gestorAplicacion.clasesDeAdministracion.Multa import Multa
 from datetime import date
+from baseDatos.Serializador import Serializador
+from baseDatos.Deserializador import Deserializador
 
 
 
@@ -29,6 +31,9 @@ class ventanaInicial(Tk):
         self.geometry("1250x800")
         self.configure(background="#b9d279")
         self.iconbitmap("img\\R.ico")
+        self.resizable(False, False)
+
+        self.sistema = sistema
 
         """
 
@@ -165,7 +170,13 @@ class ventanaInicial(Tk):
         textDescrip="Este sistema permite el control y administracion de la base de datos del sistema de bibliotecas de la Universidad Nacional. En este sistema encontraras funcionalidades para el prestamo de material de la biblioteca, para agregar/eliminar material y para gestionar tus reservas/multas."
         menu1.add_command(label="Descripcion",command=lambda: descripTexto.config(text=textDescrip))
 
-        menu1.add_command(label="Salir",command=lambda:self.destroy())
+        def salirSerializar():
+            Serializador.serializar(sistema)
+            self.destroy()
+
+        menu1.add_command(label="Salir",command=salirSerializar)
+
+        
 
 
         self.mainloop()
@@ -269,9 +280,10 @@ class ventPrincipal(Tk):
       
 if __name__ == "__main__":
     sistema = Sistema()
+    Deserializador.deserializar(sistema)
     #app = Aplicacion(sistema)
 
-    autor1 = Autor("Yuval Noah Harari", "Israel", "Historia")
+    """autor1 = Autor("Yuval Noah Harari", "Israel", "Historia")
     autor2 = Autor("J.K. Rowling", "Reino Unido", "Fantasía")
     autor3 = Autor("Harper Lee", "Estados Unidos", "Ficción")
     autor4 = Autor("José Saramago", "Portugal", "Realismo mágico")
@@ -364,7 +376,7 @@ if __name__ == "__main__":
     bibliotecas[0].añadir_pc(PC(computadores[3], True, bibliotecas[0]))
     bibliotecas[0].añadir_pc(PC(computadores[3], True, bibliotecas[0]))
     bibliotecas[0].añadir_pc(PC(computadores[3], True, bibliotecas[0]))
-    bibliotecas[0].añadir_pc(PC(computadores[4], True, bibliotecas[0]))
+    bibliotecas[0].añadir_pc(PC(computadores[3], True, bibliotecas[0]))
 
     #Pcs a sede Bogota
 
@@ -390,7 +402,7 @@ if __name__ == "__main__":
     sistema.set_libros(libros)
     sistema.set_user(user)
 
-
-
+    
+    Serializador.serializar(sistema)"""
 
     ventanaInicial(sistema)

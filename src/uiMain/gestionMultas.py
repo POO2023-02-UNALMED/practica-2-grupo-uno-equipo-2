@@ -1,11 +1,10 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
-from gestorAplicacion.paquete2.Prestamo import Prestamo
-from gestorAplicacion.paquete1.Copia import Copia
-from gestorAplicacion.paquete1.PC import PC
+from gestorAplicacion.clasesDeBiblioteca.Copia import Copia
+from gestorAplicacion.clasesDeBiblioteca.PC import PC
 from datetime import date
-from FieldFrame import FieldFrame
+from uiMain.FieldFrame import FieldFrame
 from gestorExcepciones.erroresPython import *
 from gestorExcepciones.erroresDeUsuario import *
 

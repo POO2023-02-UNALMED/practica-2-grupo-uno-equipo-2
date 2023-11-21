@@ -3,8 +3,8 @@ from tkinter import messagebox
 from tkinter import ttk
 from tkcalendar import Calendar, DateEntry
 from datetime import date
-from gestorAplicacion.paquete2.Prestamo import Prestamo
-from FieldFrame import FieldFrame
+from gestorAplicacion.clasesDeAdministracion.Prestamo import Prestamo
+from uiMain.FieldFrame import FieldFrame
 from gestorExcepciones.erroresDeUsuario import *
 from gestorExcepciones.erroresPython import *
 
@@ -155,28 +155,72 @@ class busquedaBasica(Frame):
         
 
     def reservarLibro(self, recurso):
-            sedes = []
-            self.entrada.config(state="disabled")
-            self.opciones.config(state="disabled")
-            for biblioteca in self.sistema.get_bibliotecas():
-                for copia in biblioteca.get_copias():
-                    if recurso.get_nombre() == copia.get_nombre() and biblioteca.get_nombre() not in sedes:
-                        sedes.append(biblioteca.get_nombre())
+            try:
+                sedes = []
+                self.entrada.config(state="disabled")
+                self.opciones.config(state="disabled")
+                for biblioteca in self.sistema.get_bibliotecas():
+                    for copia in biblioteca.get_copias():
+                        if recurso.get_nombre() == copia.get_nombre() and biblioteca.get_nombre() not in sedes:
+                            sedes.append(biblioteca.get_nombre())
+                if not sedes:
+                    raise NoHayCopia(recurso)
+                Label(self, text="Reserva de recurso", font=("Arial", 15), bg="white", fg="black").grid(row=3, column=0, columnspan=2, pady= (7,1))
+                Label(self, text= f"Seleccione la sede en la cual desea realizar el prestamo: ", bg="white", fg="black", font=("Arial", 11)).grid(row=4,column=0, columnspan=2, pady=5)
+                opcionSede = ttk.Combobox(self, values=sedes, foreground="white", state="readonly", font=("Arial", 11))
+                opcionSede.grid(row=5, column=0, columnspan=2) 
+                sedeSeleccionada = None                            
+                hur = Label(self, text= "Ingrese la fecha hasta la cual desea realizar el prestamo: ", bg="white", fg="black", font=("Arial", 11))
+                hur.grid(row=6,column=0, columnspan=2)
+                cal = Calendar(self, mindate=date.today())
+                cal.grid(row=7,column=0, columnspan=2)
 
+                fechaSeleccionada = None
+                def seleccionarFecha(event):
+                    global fechaSeleccionada
+                    fechaSeleccionada = cal.get_date()
+                cal.bind("<<CalendarSelected>>", seleccionarFecha)
+
+                def realizarReserva():
+                    sedeSel = opcionSede.get()
+                    for sede in self.sistema.get_bibliotecas():
+                        if sede.get_nombre() == sedeSel:
+                            sedeSel = sede
+                    for copia in sedeSel.get_copias():
+                        if copia.get_nombre() == recurso.get_nombre():
+                            copiaSel = copia 
+                    self.sistema.get_user().get_prestamos().append(Prestamo(self.sistema.get_user(), copiaSel, "Particular", date.today(), fechaSeleccionada, sedeSel))
+                    sedeSel.get_copias().remove(copiaSel)
+                    messagebox.askokcancel(title="Reserva realizada", message="¡Su reserva ha sido realizada con exito! No olvide devolver su recurso :)")
+                    self.kill(self)
+                botonReservar = Button(self, text="Reservar", command=realizarReserva, font=("Arial", 11))
+                botonReservar.grid(row=8, column=0, columnspan=2, pady=5)
+            except NoHayCopia: 
+                return messagebox.showerror("Error",NoHayCopia(recurso).getError())
+
+    def reservarComputador(self, recurso):
+        try:
+            sedes = []
+            self.entrada.config(state="readonly")
+            for biblioteca in self.sistema.get_bibliotecas():
+                for pc in biblioteca.get_PCs():
+                    if recurso.get_nombre() == pc.get_nombre() and biblioteca.get_nombre() not in sedes:
+                        sedes.append(biblioteca.get_nombre())
+            if not sedes:
+                    raise NoHayPC(recurso)
             Label(self, text="Reserva de recurso", font=("Arial", 15), bg="white", fg="black").grid(row=3, column=0, columnspan=2, pady= (7,1))
-            Label(self, text= f"Seleccione la sede en la cual desea realizar el prestamo: ", bg="white", fg="black", font=("Arial", 11)).grid(row=4,column=0, columnspan=2, pady=5)
-            opcionSede = ttk.Combobox(self, values=sedes, foreground="white", state="readonly", font=("Arial", 11))
+            Label(self, text= f"Seleccione la sede en la cual desea realizar el prestamo: ", bg="white", fg="black").grid(row=4,column=0, columnspan=2, pady=5)
+            opcionSede = ttk.Combobox(self, values=sedes, foreground="white", state="readonly")
             opcionSede.grid(row=5, column=0, columnspan=2) 
             sedeSeleccionada = None                            
-            hur = Label(self, text= "Ingrese la fecha hasta la cual desea realizar el prestamo: ", bg="white", fg="black", font=("Arial", 11))
+            hur = Label(self, text= "Ingrese la fecha hasta la cual desea realizar el prestamo: ", bg="white", fg="black")
             hur.grid(row=6,column=0, columnspan=2)
             cal = Calendar(self, mindate=date.today())
             cal.grid(row=7,column=0, columnspan=2)
 
-            fechaSeleccionada = None
+            self.fechaSeleccionada = None
             def seleccionarFecha(event):
-                global fechaSeleccionada
-                fechaSeleccionada = cal.get_date()
+                self.fechaSeleccionada = cal.get_date()
             cal.bind("<<CalendarSelected>>", seleccionarFecha)
 
             def realizarReserva():
@@ -184,55 +228,20 @@ class busquedaBasica(Frame):
                 for sede in self.sistema.get_bibliotecas():
                     if sede.get_nombre() == sedeSel:
                         sedeSel = sede
-                for copia in sedeSel.get_copias():
-                    if copia.get_nombre() == recurso.get_nombre():
-                        copiaSel = copia 
-                self.sistema.get_user().get_prestamos().append(Prestamo(self.sistema.get_user(), copiaSel, "Particular", date.today(), fechaSeleccionada, sedeSel))
-                sedeSel.get_copias().remove(copiaSel)
+                for pc in sedeSel.get_PCs():
+                    if pc.get_nombre() == recurso.get_nombre():
+                        copiaSel = pc 
+                self.sistema.get_user().get_prestamos().append(Prestamo(self.sistema.get_user(), copiaSel, "Particular", date.today(), self.fechaSeleccionada, sedeSel))
+                sedeSel.get_PCs().remove(copiaSel)
                 messagebox.askokcancel(title="Reserva realizada", message="¡Su reserva ha sido realizada con exito! No olvide devolver su recurso :)")
                 self.kill(self)
+                    
             botonReservar = Button(self, text="Reservar", command=realizarReserva, font=("Arial", 11))
             botonReservar.grid(row=8, column=0, columnspan=2, pady=5)
 
-    def reservarComputador(self, recurso):
-        sedes = []
-        self.entrada.config(state="readonly")
+        except NoHayPC:
+            return messagebox.showerror("Error", NoHayPC(recurso).getError())
 
-        for biblioteca in self.sistema.get_bibliotecas():
-            for pc in biblioteca.get_PCs():
-                if recurso.get_nombre() == pc.get_nombre() and biblioteca.get_nombre() not in sedes:
-                    sedes.append(biblioteca.get_nombre())
-
-        Label(self, text="Reserva de recurso", font=("Arial", 15), bg="white", fg="black").grid(row=3, column=0, columnspan=2, pady= (7,1))
-        Label(self, text= f"Seleccione la sede en la cual desea realizar el prestamo: ", bg="white", fg="black").grid(row=4,column=0, columnspan=2, pady=5)
-        opcionSede = ttk.Combobox(self, values=sedes, foreground="white", state="readonly")
-        opcionSede.grid(row=5, column=0, columnspan=2) 
-        sedeSeleccionada = None                            
-        hur = Label(self, text= "Ingrese la fecha hasta la cual desea realizar el prestamo: ", bg="white", fg="black")
-        hur.grid(row=6,column=0, columnspan=2)
-        cal = Calendar(self, mindate=date.today())
-        cal.grid(row=7,column=0, columnspan=2)
-
-        self.fechaSeleccionada = None
-        def seleccionarFecha(event):
-            self.fechaSeleccionada = cal.get_date()
-        cal.bind("<<CalendarSelected>>", seleccionarFecha)
-
-        def realizarReserva():
-            sedeSel = opcionSede.get()
-            for sede in self.sistema.get_bibliotecas():
-                if sede.get_nombre() == sedeSel:
-                    sedeSel = sede
-            for pc in sedeSel.get_PCs():
-                if pc.get_nombre() == recurso.get_nombre():
-                    copiaSel = pc 
-            self.sistema.get_user().get_prestamos().append(Prestamo(self.sistema.get_user(), copiaSel, "Particular", date.today(), self.fechaSeleccionada, sedeSel))
-            sedeSel.get_PCs().remove(copiaSel)
-            messagebox.askokcancel(title="Reserva realizada", message="¡Su reserva ha sido realizada con exito! No olvide devolver su recurso :)")
-            self.kill(self)
-                
-        botonReservar = Button(self, text="Reservar", command=realizarReserva, font=("Arial", 11))
-        botonReservar.grid(row=8, column=0, columnspan=2, pady=5)
 
 class busquedaPorCriterio(FieldFrame):
     
@@ -298,12 +307,57 @@ class busquedaPorCriterio(FieldFrame):
         
 
     def reservarLibro(self, recurso):
+            try: 
+                sedes = []
+                for biblioteca in self.sistema.get_bibliotecas():
+                    for copia in biblioteca.get_copias():
+                        if recurso.get_nombre() == copia.get_nombre() and biblioteca.get_nombre() not in sedes:
+                            sedes.append(biblioteca.get_nombre())
+                if not sedes: 
+                    raise NoHayCopia(recurso)
+                Label(self, text="Reserva de recurso", font=("Arial", 11), bg="white", fg="black").grid(row=3, column=0, columnspan=2)
+                Label(self, text= f"Seleccione la sede en la cual desea realizar el prestamo: ", bg="white", fg="black", font=("Arial", 11)).grid(row=4,column=0, columnspan=2, pady=5)
+                opcionSede = ttk.Combobox(self, values=sedes, foreground="white", state="readonly")
+                opcionSede.grid(row=5, column=0, columnspan=2) 
+                sedeSeleccionada = None                            
+                hur = Label(self, text= "Ingrese la fecha hasta la cual desea realizar el prestamo: ", bg="white", fg="black", font=("Arial", 11))
+                hur.grid(row=6,column=0, columnspan=2)
+                cal = Calendar(self, mindate=date.today())
+                cal.grid(row=7,column=0, columnspan=2)
+
+                fechaSeleccionada = None
+                def seleccionarFecha(event):
+                    global fechaSeleccionada
+                    fechaSeleccionada = cal.get_date()
+                cal.bind("<<CalendarSelected>>", seleccionarFecha)
+
+                def realizarReserva():
+                    sedeSel = opcionSede.get()
+                    for sede in self.sistema.get_bibliotecas():
+                        if sede.get_nombre() == sedeSel:
+                            sedeSel = sede
+                    for copia in sedeSel.get_copias():
+                        if copia.get_nombre() == recurso.get_nombre():
+                            copiaSel = copia 
+                    self.sistema.get_user().get_multas().append(Prestamo(self.sistema.get_user(), copiaSel, "Particular", date.today(), fechaSeleccionada, sedeSel))
+                    sedeSel.get_copias().remove(copiaSel)
+                    messagebox.askokcancel(title="Reserva realizada", message="¡Su reserva ha sido realizada con exito! No olvide devolver su recurso :)")
+                    self.kill(self)
+
+                botonReservar = Button(self, text="Reservar", command=realizarReserva, font=("Arial", 11))
+                botonReservar.grid(row=8, column=0, columnspan=2, pady=5)
+            except NoHayCopia:
+                messagebox.showerror("Error", NoHayCopia(recurso).getError)
+
+    def reservarComputador(self, recurso):
+        try:
             sedes = []
             for biblioteca in self.sistema.get_bibliotecas():
-                for copia in biblioteca.get_copias():
-                    if recurso.get_nombre() == copia.get_nombre() and biblioteca.get_nombre() not in sedes:
+                for pc in biblioteca.get_PCs():
+                    if recurso.get_nombre() == pc.get_nombre() and biblioteca.get_nombre() not in sedes:
                         sedes.append(biblioteca.get_nombre())
-
+            if not sedes:
+                raise NoHayPC(recurso)
             Label(self, text="Reserva de recurso", font=("Arial", 11), bg="white", fg="black").grid(row=3, column=0, columnspan=2)
             Label(self, text= f"Seleccione la sede en la cual desea realizar el prestamo: ", bg="white", fg="black", font=("Arial", 11)).grid(row=4,column=0, columnspan=2, pady=5)
             opcionSede = ttk.Combobox(self, values=sedes, foreground="white", state="readonly")
@@ -325,56 +379,18 @@ class busquedaPorCriterio(FieldFrame):
                 for sede in self.sistema.get_bibliotecas():
                     if sede.get_nombre() == sedeSel:
                         sedeSel = sede
-                for copia in sedeSel.get_copias():
-                    if copia.get_nombre() == recurso.get_nombre():
-                        copiaSel = copia 
+                for pc in sedeSel.get_PCs():
+                    if pc.get_nombre() == recurso.get_nombre():
+                        copiaSel = pc 
                 self.sistema.get_user().get_multas().append(Prestamo(self.sistema.get_user(), copiaSel, "Particular", date.today(), fechaSeleccionada, sedeSel))
-                sedeSel.get_copias().remove(copiaSel)
+                sedeSel.get_PCs().remove(copiaSel)
                 messagebox.askokcancel(title="Reserva realizada", message="¡Su reserva ha sido realizada con exito! No olvide devolver su recurso :)")
                 self.kill(self)
-
+                    
             botonReservar = Button(self, text="Reservar", command=realizarReserva, font=("Arial", 11))
             botonReservar.grid(row=8, column=0, columnspan=2, pady=5)
-
-    def reservarComputador(self, recurso):
-        sedes = []
-        for biblioteca in self.sistema.get_bibliotecas():
-            for pc in biblioteca.get_PCs():
-                if recurso.get_nombre() == pc.get_nombre() and biblioteca.get_nombre() not in sedes:
-                    sedes.append(biblioteca.get_nombre())
-
-        Label(self, text="Reserva de recurso", font=("Arial", 11), bg="white", fg="black").grid(row=3, column=0, columnspan=2)
-        Label(self, text= f"Seleccione la sede en la cual desea realizar el prestamo: ", bg="white", fg="black", font=("Arial", 11)).grid(row=4,column=0, columnspan=2, pady=5)
-        opcionSede = ttk.Combobox(self, values=sedes, foreground="white", state="readonly")
-        opcionSede.grid(row=5, column=0, columnspan=2) 
-        sedeSeleccionada = None                            
-        hur = Label(self, text= "Ingrese la fecha hasta la cual desea realizar el prestamo: ", bg="white", fg="black", font=("Arial", 11))
-        hur.grid(row=6,column=0, columnspan=2)
-        cal = Calendar(self, mindate=date.today())
-        cal.grid(row=7,column=0, columnspan=2)
-
-        fechaSeleccionada = None
-        def seleccionarFecha(event):
-            global fechaSeleccionada
-            fechaSeleccionada = cal.get_date()
-        cal.bind("<<CalendarSelected>>", seleccionarFecha)
-
-        def realizarReserva():
-            sedeSel = opcionSede.get()
-            for sede in self.sistema.get_bibliotecas():
-                if sede.get_nombre() == sedeSel:
-                    sedeSel = sede
-            for pc in sedeSel.get_PCs():
-                if pc.get_nombre() == recurso.get_nombre():
-                    copiaSel = pc 
-            self.sistema.get_user().get_multas().append(Prestamo(self.sistema.get_user(), copiaSel, "Particular", date.today(), fechaSeleccionada, sedeSel))
-            sedeSel.get_PCs().remove(copiaSel)
-            messagebox.askokcancel(title="Reserva realizada", message="¡Su reserva ha sido realizada con exito! No olvide devolver su recurso :)")
-            self.kill(self)
-                
-        botonReservar = Button(self, text="Reservar", command=realizarReserva, font=("Arial", 11))
-        botonReservar.grid(row=8, column=0, columnspan=2, pady=5)
-
+        except NoHayPC:
+            messagebox.showerror("Error", NoHayPC(recurso).getError())
 class busquedaPorLista(Frame):
     def __init__(self, root, sistema):
         super().__init__(root, width=1100, height=700, bg="white", highlightbackground = "#7c9933", highlightcolor= "#7c9933")
@@ -442,7 +458,8 @@ class busquedaPorLista(Frame):
                 for copia in biblioteca.get_copias():
                     if self.libroSel.get_nombre() == copia.get_nombre() and biblioteca.get_nombre() not in sedes:
                         sedes.append(biblioteca.get_nombre())
-
+            if not sedes:
+                raise NoHayCopia(self.libroSel.get_nombre())
             Label(self, text="Reserva de recurso", font=("Arial", 20), bg="white", fg="black").grid(row=0, column=0, columnspan=2, pady= (7,1))
             Label(self, text= f"Seleccione la sede en la cual desea realizar el prestamo: ", bg="white", fg="black", font=("Arial", 11)).grid(row=1,column=0, columnspan=2, pady=5)
             opcionSede = ttk.Combobox(self, values=sedes, foreground="white", state="readonly", font=("Arial", 11))
@@ -479,6 +496,8 @@ class busquedaPorLista(Frame):
             messagebox.showerror("Error", IndexFuera().getError())
         except ValueError:
             messagebox.showerror("Error", DatoIncorrecto("Numero").getError())
+        except NoHayCopia:
+            messagebox.showerror("Error", NoHayCopia(NoHayCopia(self.libroSel.get_nombre())).getError())
 
     
     
@@ -500,7 +519,8 @@ class busquedaPorLista(Frame):
                 for pc in biblioteca.get_PCs():
                     if self.computadorSel.get_nombre() == pc.get_nombre() and biblioteca.get_nombre() not in sedes:
                         sedes.append(biblioteca.get_nombre())
-
+            if not sedes:
+                raise NoHayPC(self.computadorSel.get_nombre())
             Label(self, text="Reserva de recurso", font=("Arial", 20), bg="white", fg="black").grid(row=0, column=0, columnspan=2, pady= (7,1))
             Label(self, text= f"Seleccione la sede en la cual desea realizar el prestamo: ", bg="white", fg="black", font=("Arial", 11)).grid(row=1,column=0, columnspan=2, pady=5)
             opcionSede = ttk.Combobox(self, values=sedes, foreground="white", state="readonly")
@@ -538,6 +558,8 @@ class busquedaPorLista(Frame):
             messagebox.showerror("Error", IndexFuera().getError())
         except ValueError:
             messagebox.showerror("Error", DatoIncorrecto("Numero").getError())
+        except NoHayPC:
+            messagebox.showerror("Error", NoHayPC(self.computadorSel.get_nombre()).getError())
         
 
 

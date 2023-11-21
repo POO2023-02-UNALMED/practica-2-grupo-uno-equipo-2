@@ -41,6 +41,9 @@ class FieldFrame(Frame):
     def crearBoton(self, texto, comando, col):
         Button(self, text=texto, command= comando, font= ("Arial", 11)).grid(row=(len(self.criterios)+1), column= col, padx= 50, pady= 10)
     
+    def añadirBoton(self, boton, col):
+        boton.grid(row=(len(self.criterios)+1), column= col, padx= 50, pady= 10)
+    
     def limpiarEntradas(self):
         for entrada in self.entradas:
             entrada.delete(0, last=END)
