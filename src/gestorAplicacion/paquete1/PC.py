@@ -44,7 +44,7 @@ class PC(Computador, Prestable):
         return not (self.disponibleEvento and self.disponibleParticular)
 
     def get_id(self):
-        return self.get_id_recurso()
+        return self.id
 
     def tipo_recurso(self):
         return "PC"

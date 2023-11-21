@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import Frame, Label, messagebox
 from FieldFrame import FieldFrame
+from gestorAplicacion.paquete1.Autor import Autor
 from gestorAplicacion.paquete2.Sistema import *
 from gestorAplicacion.paquete1.Biblioteca import *
 from gestorAplicacion.paquete1.Recurso import *
@@ -71,26 +72,54 @@ class BaseDeDatos(Frame):
         if accion == 'Agregar':
             if recurso == 'Libro':
                 # Crea y empaqueta los campos de entrada para agregar un libro
-                self.campos.append(Agregar(frame, "Criterios", ["Nombre", "ID", "ISBN", "Autor", "Año"], "Valor", self.sistema, "Libro"))
-                self.campos[-1].crearBoton("Aceptar", self.agregar, 0)
+                if sede == "Medellín":
+                    biblioteca = self.sistema.get_bibliotecas()[0]
+                elif sede == "Bogotá":
+                    biblioteca = self.sistema.get_bibliotecas()[1]
+
+                frameInputs = Agregar(frame, "Criterios", ["Nombre", "ISBN", "Autor", "Año"], "Valor", self.sistema, "Libro")
+                self.campos.append(frameInputs)
+                self.campos[-1].pack()
+                self.campos.append(tk.Button(frame, command= lambda: self.agregar(frameInputs,biblioteca,frame),text="Aceptar"))
                 self.campos[-1].pack()
 
             elif recurso == 'Copia':
                 # Crea y empaqueta los campos de entrada para agregar una copia
-                self.campos.append(Agregar(frame, "Criterios", ["ID", "Libro", "Ubicación"], "Valor", self.sistema, "Copia"))
-                self.campos[-1].crearBoton("Aceptar", self.agregar, 0)
+                if sede == "Medellín":
+                    biblioteca = self.sistema.get_bibliotecas()[0]
+                elif sede == "Bogotá":
+                    biblioteca = self.sistema.get_bibliotecas()[1]
+                
+                frameInputs = Agregar(frame, "Criterios", ["Libro"], "Valor", self.sistema, "Copia")
+                self.campos.append(frameInputs)
+                self.campos[-1].pack()
+                self.campos.append(tk.Button(frame, command= lambda: self.agregar(frameInputs,biblioteca,frame),text="Aceptar"))
                 self.campos[-1].pack()
 
             elif recurso == 'Computador':
                 # Crea y empaqueta los campos de entrada para agregar un computador
-                self.campos.append(Agregar(frame, "Criterios", ["Nombre", "ID", "Marca", "Gama"], "Valor", self.sistema, "Computador"))
-                self.campos[-1].crearBoton("Aceptar", self.agregar, 0)
+                if sede == "Medellín":
+                    biblioteca = self.sistema.get_bibliotecas()[0]
+                elif sede == "Bogotá":
+                    biblioteca = self.sistema.get_bibliotecas()[1]
+                
+                frameInputs = Agregar(frame, "Criterios", ["Nombre", "Marca", "Gama"], "Valor", self.sistema, "Computador")
+                self.campos.append(frameInputs)
+                self.campos[-1].pack()
+                self.campos.append(tk.Button(frame, command= lambda: self.agregar(frameInputs,biblioteca,frame),text="Aceptar"))
                 self.campos[-1].pack()
 
             elif recurso == 'PC':
                 # Crea y empaqueta los campos de entrada para agregar un PC
-                self.campos.append(Agregar(frame, "Criterios", ["ID", "Modelo", "Ubicacion"], "Valor", self.sistema, "PC"))
-                self.campos[-1].crearBoton("Aceptar", self.agregar, 0)
+                if sede == "Medellín":
+                    biblioteca = self.sistema.get_bibliotecas()[0]
+                elif sede == "Bogotá":
+                    biblioteca = self.sistema.get_bibliotecas()[1]
+                
+                frameInputs = Agregar(frame, "Criterios", ["Modelo"], "Valor", self.sistema, "PC")
+                self.campos.append(frameInputs)
+                self.campos[-1].pack()
+                self.campos.append(tk.Button(frame, command= lambda: self.agregar(frameInputs,biblioteca,frame),text="Aceptar"))
                 self.campos[-1].pack()
 
         
@@ -162,7 +191,7 @@ class BaseDeDatos(Frame):
 
                 for PC in biblioteca.get_PCs():
                     coso = f"{PC.get_nombre()} ID: {PC.get_id()}"
-                    lista["menu"].add_command(label=coso, command=tk._setit(copia_var, coso))                
+                    lista["menu"].add_command(label=coso, command=tk._setit(PC_var, coso))                
                 self.campos.append(tk.Button(frame, command=lambda: self.eliminar(biblioteca, PC_var.get(), frame), text = "Eliminar"))
                 self.campos[-1].pack()
         # tk.Button(frame3, text='Ejecutar', command=self.ejecutar).pack()
@@ -172,22 +201,59 @@ class BaseDeDatos(Frame):
             for widget in frame.winfo_children():
                     widget.destroy()
 
-    def agregar(self, biblioteca):
+    def agregar(self, frameInputs, biblioteca,frame):
         recurso = self.recurso_var.get()
-
+        frameInputs.getValores()
+        valores = frameInputs.valores
         if recurso == "Libro":
-            # Aquí deberías crear un nuevo objeto Libro con los parámetros deseados
-            # y luego agregarlo a la biblioteca con biblioteca.agregar_libro(libro)
-            pass
+            autor = False
+            autorobj = ""
+            for libro in biblioteca.get_libros():
+                if libro.get_isbn() == valores[1]:
+                    messagebox.showerror("Error","Este libro ya se encuentra en la base de datos (o uno con el mismo ISBN)")
+                    return
+                if libro.get_autor().get_nombre() == valores[2]:
+                    autor = True
+                    autorobj = libro.get_autor()
+            if autor == True:
+                biblioteca.get_libros().append(Libro(valores[0],0,valores[1],autorobj,valores[3]))
+            else:
+                biblioteca.get_libros().append(Libro(valores[0],0,valores[1],Autor(valores[2],"Desconocida","Desconocida"),valores[3]))
+            messagebox.showinfo("Éxito","Se ha agregado el Libro a la base de datos con éxito.")
+            self.actualizar_campos(frame)
+            
         elif recurso == "Copia":
-            # Similar al caso anterior, pero para Copia
-            pass
+            copiaDe = ""
+            for libro in biblioteca.get_libros():
+                if libro.get_nombre() == valores[0]:
+                    copiaDe = libro
+                    break
+            if modelo == "":
+                messagebox.showerror("ERROR","Ese Libro no se encuentra en la Biblioteca, añada el Libro primero o intente con otro.")
+                return
+            biblioteca.get_copias().append(Copia(0,copiaDe,biblioteca.get_sede()))
+            messagebox.showinfo("Éxito","Se ha agregado la Copia a la base de datos con éxito.")
+            self.actualizar_campos(frame)
         elif recurso == "Computador":
-            # Similar al caso anterior, pero para Computador
-            pass
+            for computador in biblioteca.get_computadores():
+                if computador.get_nombre() == valores[0] & computador.get_marca() == valores[1]:
+                    messagebox.showerror("Error","Este computador ya se encuentra en la base de datos.")
+                    return
+            biblioteca.get_computadores().append(Computador(valores[0],0,valores[1],valores[2]))
+            messagebox.showinfo("Éxito","Se ha agregado el Computador a la base de datos con éxito.")
+            self.actualizar_campos(frame)
         elif recurso == "PC":
-            # Similar al caso anterior, pero para PC
-            pass
+            modelo = ""
+            for computador in biblioteca.get_computadores():
+                if computador.get_nombre() == valores[0]:
+                    modelo = computador
+                    break
+            if modelo == "":
+                messagebox.showerror("ERROR","Ese modelo de PC no se encuentra en la Biblioteca, añada el Computador primero o intente con otro.")
+                return
+            biblioteca.get_copias().append(PC(modelo.get_nombre(),True,biblioteca.get_sede()))
+            messagebox.showinfo("Éxito","Se ha agregado el PC a la base de datos con éxito.")
+            self.actualizar_campos(frame)
         else:
             messagebox.showerror("Error","Seleccione un tipo de recurso")
 
@@ -203,8 +269,10 @@ class BaseDeDatos(Frame):
             
             for i in range(len(biblioteca.get_libros())):
                 if biblioteca.get_libros()[i].get_nombre() == re_var:
-                    del self.libros[i]
+                    del biblioteca.get_libros()[i]
                     messagebox.showinfo("Éxito","Se ha eliminado el libro de la base de datos con éxito.")
+                    self.actualizar_campos(frame)
+                    return
 
         elif recurso == "Copia":
 
@@ -222,11 +290,31 @@ class BaseDeDatos(Frame):
                     return   
 
         elif recurso == "Computador":
-            # Similar al caso anterior, pero para Computador
-            pass
+            for prestamos in biblioteca.get_prestamos():
+                for PC in prestamos.get_pcs_prestados():
+                    if(PC.get_modelo() == re_var):
+                        messagebox.showerror("Error","Hay una o más ejemplares en préstamo de este computador.")
+                        return
+            
+            for i in range(len(biblioteca.get_computadores())):
+                if biblioteca.get_computadores()[i].get_modelo() == re_var:
+                    del biblioteca.get_computadores()[i]
+                    messagebox.showinfo("Éxito","Se ha eliminado el computador de la base de datos con éxito.")
+                    self.actualizar_campos(frame)
+                    return
         elif recurso == "PC":
-            # Similar al caso anterior, pero para PC
-            pass
+            for prestamos in biblioteca.get_prestamos():
+                for PC in prestamos.get_pcs_prestados():
+                    if(f"{PC.get_modelo()} ID: {PC.get_id()}" == re_var):
+                        messagebox.showerror("Error","El PC Se Encuentra Prestado.")
+                        return
+            
+            for i in range(len(biblioteca.get_pcs())):
+                if f"{biblioteca.get_pcs()[i].get_modelo()} ID: {biblioteca.get_pcs()[i].get_id()}" == re_var:
+                    del biblioteca.get_pcs()[i]
+                    messagebox.showinfo("Éxito","Se ha eliminado el PC de la base de datos con éxito.")
+                    self.actualizar_campos(frame)
+                    return
         else:
             messagebox.showerror("Error","Seleccione un tipo de recurso")
 
